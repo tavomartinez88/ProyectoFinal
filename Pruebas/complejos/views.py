@@ -25,7 +25,7 @@ def crear_form(request):
     nombreTitular = request.GET.get('nombreTitular', '')
     res = Complejo(nombre=nombre, direccion=direccion, telefono=telefono, nombreTitular=nombreTitular)
     res.save()
-    return render_to_response("crear_form.html",{"res": res,"query": query})
+    return render_to_response("crear_form.html",{"res": res})
 
 def eliminar_form(request):
   query = request.GET.get('q', '')
