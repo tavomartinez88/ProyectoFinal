@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Crear complejo{% if query %} res{% endif %}</title>
+</head>
+<body>
+  <h1>Agregar complejo</h1>
+  <form action="." method="GET">{% csrf_token %}
+  	<label>Nombre Complejo</label>
+  	<input name='nombre' type="text" >
+  	<br>
+  	<label>Direccion</label>
+  	<input name="direccion" type="text">
+  	<br>
+  	<label>Telefono</label>
+  	<input name="telefono" type="text">
+  	<br>
+  	<label>Nombre del titular</label>
+  	<input name="nombreTitular" type="text">
+  	<br>
+  	<input type="submit" value="Enviar">
+  </form>
+</body>
+</html>
+

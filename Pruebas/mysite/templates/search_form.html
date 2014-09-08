@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Buscar complejo{% if query %} Results{% endif %}</title>
+    <meta charset="utf-8">
+    <style>
+      body { padding-top: 60px; }
+    </style>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+  <h1 >Buscar complejo</h1>
+  <form action="." method="GET">
+    
+    	<label for="q">Buscar: </label>
+    	<input type="text" name="q" value="{{ query|escape }}">
+        <input type="submit" value="Buscar">
+    </form>
+
+  {% if query %}
+    <h2>Results for "{{ query|escape }}":</h2>
+
+    {% if results %}
+      <ul>
+      {% for complejo in results %}
+        <li>{{ complejo|escape }}</l1>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No complejos found</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>
+

@@ -1,0 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Eliminar complejo{% if query %} Results{% endif %}</title>
+</head>
+<body>
+  <h1>Eliminar complejo</h1>
+  <form action="." method="GET">
+    <label for="q">Eliminar: </label>
+    <input type="text" name="q" value="{{ query|escape }}">
+    <input type="submit" value="Eliminar">
+  </form>
+
+  
+</body>
+</html>
+
