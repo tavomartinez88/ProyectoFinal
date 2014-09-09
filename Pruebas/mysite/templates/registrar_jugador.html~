@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Registrar Jugadores</title>
+</head>
+<body>
+  <h1>Registrar Jugador</h1>
+  <div id="form" align="center">
+  <form action="." method="Get">{% csrf_token %}
+  	<label>Nombre</label>
+  	<input name='nombre' type="text" >
+  	<br>
+  	<label>Apellido</label>
+  	<input name='apellido' type="text" >
+  	<br>
+  	<label>Email</label>
+  	<input name='email' type="text" >
+  	<br>
+  	<label>DNI</label>
+  	<input name='dni' type="text">
+  	<br>
+  	<label>Direccion</label>
+  	<input name="direccion" type="text">
+  	<br>
+  	<label>Telefono1(Hogar)</label>
+  	<input name="telefono1" type="text">
+  	<br>
+  	<label>Telefono2(Celular)</label>
+  	<input name="telefono2" type="text">
+  	<br>
+  	<label>Nombre de usuario</label>
+  	<input name="username" type="text">
+  	<br>
+  	<label>Contraseña</label>
+  	<input name="password" type="text">
+  	<br>
+  	<input type="submit" value="Enviar">
+  </div>
+  </form>
+</body>
+</html>
