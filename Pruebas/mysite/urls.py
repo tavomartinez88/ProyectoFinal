@@ -15,5 +15,5 @@ urlpatterns += patterns('complejos.views',
 urlpatterns += patterns('jugadores.views',
 	    				url(r'^search-player/', 'search_player', name='search_player'),
     					url(r'^registro/', 'registrar_jugador', name='registrar_jugador'),
-    					url(r'^eliminar-jugador/', 'eliminar_jugador', name='eliminar_jugador'),
-    					url(r'^players/', include('jugadores.urls', namespace="upersonas")),)
+    					url(r'^eliminar-jugador/', 'eliminar_jugador', name='eliminar_jugador'),)
+    					
