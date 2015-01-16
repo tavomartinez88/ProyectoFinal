@@ -35,6 +35,3 @@ MARCAR COMO FINALIZADO
 MARCAR COMO DELIVERED 
 
                 $ git commit -m "[Delivers #historyNumberPivotalTracker] mensaje"
-
-
-comando git-pivotal tracker
