@@ -1,5 +1,5 @@
 """
-Django settings for proyectoFinal project..
+Django settings for proyectoFinal project...
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
