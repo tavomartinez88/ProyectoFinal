@@ -7,9 +7,7 @@ class City(models.Model):
 	
 
 	def __str__(self):
-			return '%s%i'% (self.name, self.postCode)
+		return '%s %i'%(self.name, self.postCode)
 
-	class Meta:
-		ordering = ["name"]		
-
-
+	class Admin:
+		pass
