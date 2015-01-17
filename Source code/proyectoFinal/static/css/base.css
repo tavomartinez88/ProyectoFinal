@@ -2,7 +2,7 @@
 body, p, td, th { font-family:"Times New Roman", times, serif; }
 body { background-color:#f4e0b4; margin:4em; margin-top:0; }
 body > header { font-family:myScript; font-size:20pt; border-bottom:2px solid black; }
-body > header > h1 { margin-top:0; }
+body > header > h1 { margin-top:1; }
 body > header > h1 a { margin:0; color:#333; text-decoration:none; }
 .post p { text-indent:4ex; text-align:justify; }
 .post aside p { font-style:italic; text-align:right; }
