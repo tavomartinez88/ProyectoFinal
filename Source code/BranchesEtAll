@@ -1,0 +1,40 @@
+ARCHIVO SUBIDO A MODO DE PRUEBA UNICAMENTE.
+
+IGNORAR TODO LO SIGUIENTE.
+
+POR FAVOR.
+
+CREAR BRANCH PARA LA HISTORIA:  
+                $ git checkout -b <usrname>/<historyNumberPivotalTracker>_<NombreModificacion>
+
+LISTAR TODOS LOS BRANCHES:
+                $ git branch
+
+MODIFICAR ARCHIVOS
+
+AGREGAR ARCHIVOS
+                $ git add <Filename>
+
+COMMITEAR
+                $ git commit -m '[#historyNumberPivotalTracker] NombreModificacion'
+
+HACER EL PUSH
+                $ git push origin <usrname>/<historyNumberPivotalTracker>_<NombreModificacion>
+
+IR AL MASTER
+                $ git checkout master
+
+                $ git fetch
+                
+                $ git pull origin master
+
+MARCAR COMO FINALIZADO
+
+                $ git commit -m "[Finishes #historyNumberPivotalTracker] mensaje"
+
+MARCAR COMO DELIVERED 
+
+                $ git commit -m "[Delivers #historyNumberPivotalTracker] mensaje"
+
+
+comando git-pivotal tracker
