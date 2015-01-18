@@ -1,0 +1,16 @@
+@font-face { font-family: myScript; src: url('SCRIPTIN.ttf'); }
+body, p, td, th { font-family:"Times New Roman", times, serif; }
+body { background-color:#f4e0b4; margin:4em; margin-top:0; }
+body > header { font-family:myScript; font-size:20pt; border-bottom:2px solid black; }
+body > header > h1 { margin-top:1; }
+body > header > h1 a { margin:0; color:#333; text-decoration:none; }
+.post p { text-indent:4ex; text-align:justify; }
+.post aside p { font-style:italic; text-align:right; }
+.post header a { font-family:sans; color:#333; text-decoration:none; }
+.post header a:hover { color:#f4e0b4; text-shadow:0 1px 1px #333, 1px 0 1px #333, -1px 0 1px #333, 0 -1px 1px #333, -1px 1px 1px #333, -1px 1px 1px #333, -1px -1px 1px #333; font-size:1.1em; }
+#comments { color:#333; }
+#comments article { border:1px solid black; border-radius:5px 5px; box-shadow:5px 5px 5px #888; margin:1em; padding:1em; }
+#comments article p.owner { text-align:center; }
+#comments article aside p { text-align:right; font-style:italic; }
+.errorlist { background-color:#f44; color:white; padding:0.25em; font-weight:bold; font-style:italic; font-family:sans; list-style:none;}
+label { display:block; margin-top:1em;}
