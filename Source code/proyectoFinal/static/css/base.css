@@ -1,71 +1,16 @@
-
-body {
-    color: #efd;
-    background: #453;
-    padding: 0 2em;
-    margin: 0;
-    font-family: sans-serif;
-    font-size: 120%;
-}
-
-h1 {
-    padding: 30px 30px;
-    background: #675;
-    color: #ffa;
-    font-size: 150%;
-}
-
-h2 {
-    color: #bf8;
-    border-top: 1px dotted #fff;
-    margin-top: 2em
-}
-
-p {
-    margin: 1em 0
-}
-
-a:link {
-    color: red;
-}
-
-a:visited {
-    color: orange;
-}
-
-a:hover {
-    color: green;
-}
-
-hr {
-    margin: 20px 0px;
-    color: #efd;
-    background-color: #efd;
-    height: 2px;
-}
-
-table {
-    border-collapse: collapse;
-    border: 1px solid #fff;
-    padding: 0px;
-    margin-bottom: 10px;
-}
-
-td {
-  border: 1px solid #fff;
-  padding: 10px;
-  text-align: center;
-}
-
-th {
-  border: 1px solid #fff;
-  padding: 10px;
-  color: #ffa;
-  background: #675;
-}
-
-footer {
-    font-size: 90%;
-    color: #ffa;
-    text-align: center;
-}
+@font-face { font-family: myScript; src: url('SCRIPTIN.ttf'); }
+body, p, td, th { font-family:"Times New Roman", times, serif; }
+body { background-color:#f4e0b4; margin:4em; margin-top:0; }
+body > header { font-family:myScript; font-size:20pt; border-bottom:2px solid black; }
+body > header > h1 { margin-top:1; }
+body > header > h1 a { margin:0; color:#333; text-decoration:none; }
+.post p { text-indent:4ex; text-align:justify; }
+.post aside p { font-style:italic; text-align:right; }
+.post header a { font-family:sans; color:#333; text-decoration:none; }
+.post header a:hover { color:#f4e0b4; text-shadow:0 1px 1px #333, 1px 0 1px #333, -1px 0 1px #333, 0 -1px 1px #333, -1px 1px 1px #333, -1px 1px 1px #333, -1px -1px 1px #333; font-size:1.1em; }
+#comments { color:#333; }
+#comments article { border:1px solid black; border-radius:5px 5px; box-shadow:5px 5px 5px #888; margin:1em; padding:1em; }
+#comments article p.owner { text-align:center; }
+#comments article aside p { text-align:right; font-style:italic; }
+.errorlist { background-color:#f44; color:white; padding:0.25em; font-weight:bold; font-style:italic; font-family:sans; list-style:none;}
+label { display:block; margin-top:1em;}
