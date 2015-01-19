@@ -4,22 +4,9 @@ from django.db import models
 class Telephone(models.Model):
 	number = models.CharField(max_length=9)
 
-	def createTelephone(self, numero):
-		num = Telephone(number = numero)
-		num.save()	
-
-
-
 class LandLine(models.Model):
 	areaCode = models.CharField(max_length=6)
 	Id_number = models.ForeignKey(Telephone)
-
-	def createLandLine(self, codeArea, numero):
-		cod = LandLine(areaCode = codeArea)
-		cod.save()
-		num = Telephone(number = numero)
-		num.save()
-
 
 	def __str__(self):
 		numero = Telephone.objects.filter(id = Id_number)
@@ -31,10 +18,6 @@ class LandLine(models.Model):
 
 class CellPhone(models.Model):
 	Id_number = models.ForeignKey(Telephone)
-
-	def createCellPhone(self,numero):
-		num = Telephone(number = numero)
-		num.save()
 
 	def __str__(self):
 		numero = Telephone.objects.filter(id = Id_number)
