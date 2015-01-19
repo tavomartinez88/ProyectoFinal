@@ -54,7 +54,7 @@ INSTALLED_APPS = (
     #'django.contrib.staticfiles',
     'proyectoFinal.telephones',
     'proyectoFinal.citys',
-    'proyectoFinal.users'
+    'proyectoFinal.users',
 )
 
 ROOT_URLCONF = 'proyectoFinal.urls'

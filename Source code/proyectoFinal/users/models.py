@@ -1,5 +1,5 @@
 from django.db import models
-from proyectoFinal.telephones.models import Telephone
+from telephones.models import Telephone
 
 class User(models.Model):
 	firstname = models.CharField(max_length=40)
