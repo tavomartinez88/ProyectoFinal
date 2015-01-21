@@ -1,3 +1,5 @@
+#Las funcionalidades propuesta abajo auqnue se dejan por si son de utilidad no seran necesarias puesto 
+#que el framework django provee metodos que realizan el mismo trabajo
 from django.db import models
 
 # Create your models here.
@@ -24,17 +26,17 @@ class LandLine(models.Model):
 		num = Telephone.objects.get(number = numberNow)
 		cod = LandLine.objects.get(Id_number = num.id, areaCode = areaNow)
 		
-		if numberNew != "" && areaNew!= "" && num != null && cod != null :
+		if ((numberNew != "") and (areaNew!= "") and (num != null) and (cod != null)) :
 			cod.areaCode = areaNew
 			num.number = numberNew
 			num.save()
 			cod.save()
 		
-		if numberNew == "" && areaNew!= "" && num != null && cod != null :
+		if numberNew == "" and areaNew!= "" and num != null and cod != null :
 			cod.areaCode = areaNew
 			cod.save()			
 
-		if numberNew != "" && areaNew == "" && num != null && cod != null :
+		if numberNew != "" and areaNew == "" and num != null and cod != null :
 			num.number = numberNew
 			num.save()
 
@@ -57,15 +59,20 @@ class CellPhone(models.Model):
 		num.save()
 		cell.save()
 
-	def deleteTelephone(self, numero):
+	def deleteCellPhone(self, numero):
 		num = Telephone.objects.get(number = numero)
-		num.delete()
+		if num != null:
+			num.delete()
+		else :
+			print "el numero no existe"	
 
-	def updateTelephone(self, numberNow, numberNew):
+	def updateCellPhone(self, numberNow, numberNew):
 		num = Telephone.objects.get(number = numberNow)
 		if num != null :
 			num.number=numberNew
 			num.save()
+		else :
+			print "el numero no existe"			
 
 
 	def __str__(self):
