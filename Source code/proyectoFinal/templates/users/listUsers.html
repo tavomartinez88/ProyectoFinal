@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Users</title>
+</head>
+<body>	
+	<h1>Usuarios Registrados</h1>
+
+	<ul>
+		{% for user in object_list %} <!-- object_list -> Nombre de la lista por defecto de Django -->
+			<li><b> Nombre: </b> {{user.firstname}} </li>
+			<li><b> Apellido: </b> {{user.lastname}} </li>
+			<li><b> Email: </b> {{user.email}} </li>
+			<li><b> Nombre de usuario: </b> {{user.username}} </li>
+			<li><b> Contraseña: </b> {{user.password}} </li>
+			<li><b> Ciudad: </b> {{user.city.name}} </li>
+			<li><b> Telefono: </b> {{user.telephones.number}} </li>
+			<button><a href="/update">Editar</a></button>
+			<br>
+		{% endfor %}
+	</ul>
+</body>
