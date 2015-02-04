@@ -4,6 +4,7 @@
 <form action="/register" method="POST">{% csrf_token %}
 <ul>
 	{{form.as_ul}}
+	{{tform.as_ul}}
 </ul>
 <input type="submit" name="submit" value="Crear Usuario">
 </form>
