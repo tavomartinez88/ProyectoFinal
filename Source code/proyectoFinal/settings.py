@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'proyectoFinal.telephones',
     'proyectoFinal.citys',
     'proyectoFinal.users',
+    'proyectoFinal.complexes',
 )
 
 ROOT_URLCONF = 'proyectoFinal.urls'

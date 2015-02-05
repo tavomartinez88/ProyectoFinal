@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Complejos</title>
+</head>
+<body>	
+	<h1>Complejos Registrados</h1>
+
+	<ul>
+		{% for complex in complexes %} <!-- users -> Nombre de la lista especificado en views.py -->
+			<li><b> Nombre: </b> {{complex.name}} </li>
+			<li><b> Direccion: </b> {{complex.streetAddress}} </li>
+			<li><b> Asador: </b> {{complex.roaster}} </li>
+			<li><b> Cantina: </b> {{complex.buffet}} </li>
+			<li><b> Vestuarios: </b>{{complex.lockerRoom}} </li>
+			<li><b> Dueño: </b> {{complex.user.firstname}} </li>
+			
+			<button><a href="/update_user/1">Editar</a></button>
+			<br><br>
+		{% endfor %}
+	</ul>
+</body>
