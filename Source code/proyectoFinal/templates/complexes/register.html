@@ -1,0 +1,10 @@
+<!doctype html>
+<title>Registro</title>
+<h1>REGISTRAR COMPLEJO</h1>
+<form action="/newcomplex" method="POST">{% csrf_token %}
+<ul>
+	{{cform.as_ul}}
+	
+</ul>
+<input type="submit" name="submit" value="Crear Complejo">
+</form>

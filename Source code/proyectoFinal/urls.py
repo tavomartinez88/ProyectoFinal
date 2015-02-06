@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from complexes.views import listComplex,updateComplex, deleteComplex
+
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 admin.autodiscover()
 
@@ -13,4 +15,13 @@ urlpatterns += patterns('proyectoFinal.users.views',
 						url(r'^update_user/(?P<pk>\d+)/$', userUpdate.as_view()), #(?P<pk>\d+) -> ID for the user. This has to be changed when the login implemented
 						url(r'^update_telephone/(?P<pk>\d+)/$', telephoneUpdate.as_view()),
 						url(r'^delete_user/(?P<pk>\d+)/$', deleteUser.as_view()),) 
+
+
+
+urlpatterns += patterns('proyectoFinal.complexes.views',
+						url(r'^newcomplex/?$', 'register'),
+						url(r'^searchcomplex/?$', 'search_complex'),
+						url(r'^complexes/?$', listComplex.as_view()),
+						url(r'^updatecomplex/(?P<pk>\d+)/$', updateComplex.as_view()), #(?P<pk>\d+) -> ID for the user. This has to be changed when the login implemented
+						url(r'^deletecomplex/(?P<pk>\d+)/$', deleteComplex.as_view()),) 
 
