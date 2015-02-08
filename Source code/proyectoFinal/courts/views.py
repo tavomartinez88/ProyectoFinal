@@ -32,8 +32,6 @@ class updateCourt(UpdateView):
   template_name_suffix = '_update_court'
   success_url = '/courts' #redirect when the edit form is filled
 
-def getNameComplex(self):
-	return '%s' % (self.complejo.name)
 
 def search_court(request):
   query = request.GET.get('q', '')
