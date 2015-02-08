@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Canchas</title>
+</head>
+<body>	
+	<h1>CANCHAS REGISTRADAS</h1>
+
+	<ul>
+		{% for court in courts %} <!-- users -> Nombre de la lista especificado en views.py -->
+			<li><b> N° de cancha: </b> {{court.id}} </li>
+			<li><b> Luz artificial: </b> {{court.artificial_light}} </li>
+			<li><b> Tipo de piso: </b> {{court.get_lawnType_display}} </li> 
+			<li><b> Tipo de cancha: </b> {{court.get_soccerType_display}} </li> 
+			<li><b> Complejo: </b> {{court.complejo.name}} </li>
+			<!-- Para mostrar el nombre completo, no la abreviacion de la base de datos -->
+			<button><a href="#">Editar</a></button>
+			<br><br>
+		{% endfor %}
+	</ul>
+</body>
