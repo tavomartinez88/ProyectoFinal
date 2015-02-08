@@ -34,3 +34,13 @@ class deleteTeam(DeleteView):
 	model = Team
 	success_url = '/teams'
 
+def searchTeam(request):
+  query = request.GET.get('q', '')
+  if query:
+	qset = (Q(name__icontains=query))
+	results = Team.objects.filter(qset).distinct()
+
+  else:
+	results = []
+  return render_to_response("teams/searchTeam.html",{"results": results,"query": query})
+
