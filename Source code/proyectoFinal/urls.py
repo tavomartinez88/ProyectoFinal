@@ -6,6 +6,10 @@ from complexes.views import listComplex,updateComplex, deleteComplex
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 admin.autodiscover()
 
+from courts.views import listCourt, updateCourt, deleteCourt
+admin.autodiscover()
+
+
 urlpatterns = patterns('',
 	    				url(r'^admin/', include(admin.site.urls)),)
 
@@ -25,3 +29,10 @@ urlpatterns += patterns('proyectoFinal.complexes.views',
 						url(r'^updatecomplex/(?P<pk>\d+)/$', updateComplex.as_view()), #(?P<pk>\d+) -> ID for the user. This has to be changed when the login implemented
 						url(r'^deletecomplex/(?P<pk>\d+)/$', deleteComplex.as_view()),) 
 
+
+urlpatterns += patterns('proyectoFinal.courts.views',
+						url(r'^addCourt/?$', 'register'),
+						url(r'^searchcourt/?$', 'search_court'),
+						url(r'^courts/?$', listCourt.as_view()),
+						url(r'^editCourt/(?P<pk>\d+)/$', updateCourt.as_view()),
+						url(r'^deletecourt/(?P<pk>\d+)/$', deleteCourt.as_view()),) 
