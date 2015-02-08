@@ -1,0 +1,6 @@
+<title>Eliminar Equipo</title>
+<h1>ELIMINAR EQUIPO</h1>
+<form action="" method="post">{% csrf_token %}
+    <p>¿Esta seguro que quiere eliminar este equipo?: <b>{{team.name}}<b></p>
+    <input type="submit" value="Eliminar" />
+</form>
