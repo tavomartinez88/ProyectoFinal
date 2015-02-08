@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Teams</title>
+</head>
+<body>	
+	<h1>Equipos Registrados</h1>
+
+	<ul>
+		{% for team in teams %} <!-- teams -> Nombre de la lista especificado en views.py -->
+			<li><b> Nombre: </b> {{team.name}} </li>
+			<li><b> Capitan(ID): </b> {{team.captain_id}} </li>
+			{% for user in users %}
+				<li><b> Jugador: </b> {{user}} </li>
+			{% endfor %}
+			<button><a href="/updateteam/2">Editar</a></button>
+			<br><br>
+		{% endfor %}
+	</ul>
+</body>
