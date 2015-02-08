@@ -17,10 +17,12 @@ class listTeams(ListView):
 	model = Team
 	context_object_name = 'teams' # Nombre de la lista a recorrer desde listUsers.html
 
-	def get_context_data(self, **kwargs):
-		ctx = super(listTeams, self).get_context_data(**kwargs)
-		ctx['users'] = User.objects.all()
-		return ctx
+	def teams(request):
+		context = RequestContext(request)
+		teams = Teams.objects.order_by('name') # get all the teams
+		players = User.objects.order_by('lastname') # get all the players
+		context_dic = {'teams': teams, 'players': players}
+		return render_to_response('/teams.html', context_dic, context)
 
 class updateTeam(UpdateView):
 	model = Team

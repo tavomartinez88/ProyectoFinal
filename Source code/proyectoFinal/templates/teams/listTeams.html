@@ -9,13 +9,18 @@
 
 	<ul>
 		{% for team in teams %} <!-- teams -> Nombre de la lista especificado en views.py -->
-			<li><b> Nombre: </b> {{team.name}} </li>
-			<li><b> Capitan(ID): </b> {{team.captain_id}} </li>
-			{% for user in users %}
-				<li><b> Jugador: </b> {{user}} </li>
-			{% endfor %}
+			<li><b> Nombre del equipo: </b> {{team.name}} </li>
+			<br>
+			<li><b> Capitán: </b> {{team.captain}} </li>
+        	<br>
+        	{% for p in team.players.all %}
+        		<li><b>Jugador: </b> {{p}} </li> <!-- team.players.all returns all the players from each team -->
+        	{% endfor %}
 			<button><a href="/updateteam/2">Editar</a></button>
 			<br><br>
 		{% endfor %}
 	</ul>
+	<br><br><br><br>
+	<ul>
+
 </body>
