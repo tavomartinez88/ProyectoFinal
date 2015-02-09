@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response
 from models import Team
 from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
-from django.core.context_processors import csrf # to increase security in the page
+from django.core.context_processors import csrf # to increase security in the site
 from django.template import RequestContext
 from proyectoFinal.users.models import User
 
