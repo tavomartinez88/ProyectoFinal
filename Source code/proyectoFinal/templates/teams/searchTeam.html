@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Buscar equipos</title>
+    <meta charset="utf-8">
+    
+</head>
+<body>
+  <h1 >BUSCAR EQUIPOS</h1>
+  <form action="" method="GET">
+    
+    	<label for="q">Buscar: </label>
+    	<input type="text" name="q" value="{{ query|escape }}">
+        <input type="submit" value="Buscar">
+    </form>
+
+  {% if query %}
+    <h2>Resultados para "{{ query|escape }}":</h2>
+
+    {% if results %}
+      <ul>
+      <label></label>
+      {% for team in results %}
+        <li>{{ team.name|escape }}</l1>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No hay equipos para la busqueda solicitada</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>
