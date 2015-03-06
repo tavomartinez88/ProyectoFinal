@@ -11,9 +11,9 @@
 		{% for complex in complexes %} <!-- users -> Nombre de la lista especificado en views.py -->
 			<li><b> Nombre: </b> {{complex.name}} </li>
 			<li><b> Direccion: </b> {{complex.streetAddress}} </li>
-			<li><b> Asador: </b> {{complex.roaster}} </li>
-			<li><b> Cantina: </b> {{complex.buffet}} </li>
-			<li><b> Vestuarios: </b>{{complex.lockerRoom}} </li>
+			<li><b> Asador: </b> {{complex.roaster|yesno:"Si,No"}} </li>
+			<li><b> Cantina: </b> {{complex.buffet|yesno:"Si,No"}} </li>
+			<li><b> Vestuarios: </b>{{complex.lockerRoom|yesno:"Si,No"}} </li>
 			<li><b> Dueño: </b> {{complex.user.firstname}} </li>
 			
 			<button><a href="/update_user/1">Editar</a></button>

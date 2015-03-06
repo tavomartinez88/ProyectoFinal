@@ -8,7 +8,7 @@ class Court(models.Model):
 	FUTBOL5 = 'F5'
 	FUTBOL7 = 'F7'
 	FUTBOL11 = 'F11'
-	artifial_light = models.BooleanField()
+	artificial_light = models.BooleanField()
 	lawnType_choices = (
 		(CESPED_NATURAL, 'Cesped Natural'),
 		(CESPED_SINTETICO, 'Cesped Sintetico'),
@@ -19,7 +19,7 @@ class Court(models.Model):
 		(FUTBOL7, 'Futbol 7'),
 		(FUTBOL11, 'Futbol 11')
 		)
-	lawnType = models.CharField(max_length=23, choices=lawnType_choices, default=CESPED_SINTETICO)
+	lawnType = models.CharField(max_length=23, choices=lawnType_choices, default=CESPED_SINTETICO,verbose_name='Tipo de cesped')
 	soccerType = models.CharField(max_length=23, choices=soccerType_choices, default=FUTBOL5, verbose_name='Tipo de cancha')
 	complejo = models.ForeignKey(Complex, null=True, on_delete=models.CASCADE)
 
