@@ -4,6 +4,7 @@ from django.contrib import admin
 from complexes.views import listComplex,updateComplex, deleteComplex
 from teams.views import TeamCreate, listTeams, updateTeam, deleteTeam
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
+from reservations.views import ReservationCreate, listReservations, markAsAttended, cancelReservation, searchReservation
 admin.autodiscover()
 
 from courts.views import listCourt, updateCourt, deleteCourt
@@ -41,3 +42,10 @@ urlpatterns += patterns('proyectoFinal.teams.views',
 						url(r'^updateteam/(?P<pk>\d+)/$', updateTeam.as_view()),
 						url(r'^deleteteam/(?P<pk>\d+)/$', deleteTeam.as_view()),
 						url(r'^searchteam/?$', 'searchTeam'),)
+
+urlpatterns += patterns('proyectoFinal.reservations.views',
+						url(r'^newreservation/?$', ReservationCreate.as_view()),
+						url(r'^reservations/?$', listReservations.as_view()),
+						url(r'^updatereservation/(?P<pk>\d+)/$', markAsAttended.as_view()),
+						url(r'^cancelreservation/(?P<pk>\d+)/$', cancelReservation.as_view()),
+						url(r'^searchreservation/?$', 'searchReservation'),)
