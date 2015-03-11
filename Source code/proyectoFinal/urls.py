@@ -2,7 +2,12 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from complexes.views import listComplex,updateComplex, deleteComplex
+
+admin.autodiscover()
 from teams.views import TeamCreate, listTeams, updateTeam, deleteTeam
+
+from matches.views import MatchCreate, listMatches , deleteMatch , addResult
+admin.autodiscover()
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 admin.autodiscover()
 
@@ -41,3 +46,10 @@ urlpatterns += patterns('proyectoFinal.teams.views',
 						url(r'^updateteam/(?P<pk>\d+)/$', updateTeam.as_view()),
 						url(r'^deleteteam/(?P<pk>\d+)/$', deleteTeam.as_view()),
 						url(r'^searchteam/?$', 'searchTeam'),)
+
+urlpatterns += patterns('proyectoFinal.matches.views',
+						url(r'^newmatch/?$', MatchCreate.as_view()),
+						url(r'^matches/?$', listMatches.as_view()),
+						url(r'^deletematch/(?P<pk>\d+)/$', deleteMatch.as_view()),
+						url(r'^addscore/(?P<pk>\d+)/$', addResult.as_view()),
+						url(r'^searchmatch/?$', 'searchMatch'),)
