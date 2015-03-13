@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Buscar Partidos</title>
+    <meta charset="utf-8">
+    
+</head>
+<body>
+  <h1 >Buscar Partidos</h1>
+  <form action="" method="GET">
+      Formato de Búsqueda: YYYY-MM-DD <br><br>
+    	<label for="q">Buscar: </label>
+    	<input type="text" name="q" value="{{ query|escape }}"> 
+        <input type="submit" value="Buscar">
+    </form>
+
+  {% if query %}
+    <h2>Resultados para "{{ query|escape }}":</h2>
+
+    {% if results %}
+      <ul>
+      <label></label>
+      {% for match in results %}
+        <li>Equipo local :{{ match.teamlocal.name|escape }}|Equipo visitante :{{ match.teamVisitant.name|escape }}|Horario:{{ match.hour|escape }}:{{ match.minutes|escape }}|Resultado:{{ match.score|escape }}</l1><br>
+
+      {% endfor %}
+      </ul><br>
+    {% else %}
+      <p>No hay reservas que coincidan con la busqueda solicitada</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>

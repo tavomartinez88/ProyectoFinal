@@ -1,0 +1,8 @@
+<title>Delete Match</title>
+<h1>CANCELAR PARTIDO</h1>
+<form action="" method="post">{% csrf_token %}
+    <p>¿ Esta seguro que quiere eliminar el partido del dia <b>{{match.day}}</b> 
+    	de la hora <b>{{match.hour}}:{{match.minutes}}</b> entre <b>{{match.teamlocal.name}}</b> y
+        <b>{{match.teamVisitant.name}}</b>?</p>
+    <input type="submit" value="Eliminar" />
+</form>
