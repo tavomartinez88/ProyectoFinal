@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Matches</title>
+</head>
+<body>	
+	<h1>Partidos Registrados</h1>
+
+	<ul>
+		{% for match in matches %} <!--matches -> Nombre de la lista especificado en views.py -->
+			<li><b> Fecha del Partido: </b> {{match.date}} </li>
+			<li><b> Hora: </b> {{match.hour}}:{{match.minutes}} </li>
+			<li><b> Resultado: </b> {{match.score}}</li>
+			<li><b> Equipo local: </b> {{match.teamlocal.name}} </li>
+			<li><b> Equipo visitante: </b> {{match.teamVisitant.name}} </li>
+			<br><br>
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>

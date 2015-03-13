@@ -1,0 +1,7 @@
+<title>Cancelar Reserva</title>
+<h1>CANCELAR RESERVA</h1>
+<form action="" method="post">{% csrf_token %}
+    <p>¿ Esta seguro que quiere cancelar la reserva del dia <b>{{reservation.date}}</b> 
+    	de la hora <b>{{reservation.hour}}:{{reservation.minutes}}</b> ?</p>
+    <input type="submit" value="Cancelar" />
+</form>

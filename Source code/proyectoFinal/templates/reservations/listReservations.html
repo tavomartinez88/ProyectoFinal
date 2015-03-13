@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Reservations</title>
+</head>
+<body>	
+	<h1>Reservas Agendadas</h1>
+
+	<ul>
+		{% for reservation in reservations %} <!-- reservations -> Nombre de la lista especificado en views.py -->
+			<li><b> Fecha de la Reserva: </b> {{reservation.date}} </li>
+			<li><b> Hora: </b> {{reservation.hour}}:{{reservation.minutes}} </li>
+			<li><b> Realizada por: </b> {{reservation.user}} </li>
+			<li><b> Cancha Reservada: </b> {{reservation.court}} </li>
+			<li><b> Asistió?: </b> {{reservation.attended|yesno:"Si,No"}} </li>
+			<br><br>
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>

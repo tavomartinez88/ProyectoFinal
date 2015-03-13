@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'proyectoFinal.courts',
     'proyectoFinal.teams',
     'proyectoFinal.reservations',
+    'proyectoFinal.matches',
 )
 
 ROOT_URLCONF = 'proyectoFinal.urls'
