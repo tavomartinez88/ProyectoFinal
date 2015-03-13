@@ -24,6 +24,6 @@ class Court(models.Model):
 	complejo = models.ForeignKey(Complex, null=True, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return '%s %s %s %s %s' %(self.id, self.artifial_light, self.get_lawnType_display(), self.get_soccerType_display(), self.complejo.name)
+		return '%s %s %s' %(self.get_lawnType_display(), self.get_soccerType_display(), self.complejo.name)
 
 # Create your models here.
