@@ -7,6 +7,7 @@ from matches.views import MatchCreate, listMatches , deleteMatch , addResult
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 from reservations.views import ReservationCreate, listReservations, markAsAttended, cancelReservation, searchReservation
 from courts.views import listCourt, updateCourt, deleteCourt
+from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
 admin.autodiscover()
 
 
@@ -55,3 +56,10 @@ urlpatterns += patterns('proyectoFinal.matches.views',
 						url(r'^deletematch/(?P<pk>\d+)/$', deleteMatch.as_view()),
 						url(r'^addscore/(?P<pk>\d+)/$', addResult.as_view()),
 						url(r'^searchmatch/?$', 'searchMatch'),)
+
+urlpatterns += patterns('proyectoFinal.tournaments.views',
+						url(r'^newtournament/?$', TournamentCreate.as_view()),
+						url(r'^tournaments/?$', listTournaments.as_view()),
+						url(r'^updatetournament/(?P<pk>\d+)/$', markAsFinished.as_view()),
+						url(r'^canceltournament/(?P<pk>\d+)/$', cancelTournament.as_view()),
+						url(r'^searchtournament/?$', 'searchTournament'),)

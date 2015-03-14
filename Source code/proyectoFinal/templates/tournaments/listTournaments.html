@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Torneos</title>
+</head>
+<body>	
+	<h1>Torneos Registrados</h1>
+
+	<ul>
+		{% for tournament in tournaments %} <!-- tournaments -> Nombre de la lista especificado en views.py -->
+			<li><b> Nombre del torneo: </b> {{tournament.name}} </li>
+			<li><b> Estado del torneo : </b> {{tournament.inProgress|yesno:"En Juego,Finalizado"}} </li>
+			<li><b> Equipos inscriptos: </b>
+			{% for team in tournament.teams.all %}
+        		<p>&nbsp;&nbsp;&nbsp;&nbsp; {{team}}</p><!-- tournament.teams.all returns all the teams from each tournament -->
+        	{% endfor %}
+			<li><b> Complejo Organizador: </b> {{tournament.complex}} </li>
+			<br><br>
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Buscar torneos</title>
+    <meta charset="utf-8">
+    
+</head>
+<body>
+  <h1 >BUSCAR TORNEOS</h1>
+  <form action="" method="GET">
+    	<label for="q">Buscar: </label>
+    	<input type="text" name="q" value="{{ query|escape }}"> 
+        <input type="submit" value="Buscar">
+    </form>
+
+  {% if query %}
+    <h2>Resultados para "{{ query|escape }}":</h2>
+
+    {% if results %}
+      <ul>
+      <label></label>
+      {% for tournament in results %}
+        <li><b>Nombre del Torneo: </b> {{ tournament.name|escape }}</l1>
+        <p> <b>Complejo organizador: </b>{{ tournament.complex|escape }}</p>
+            <b>Equipos inscriptos: </b>
+            {% for team in tournament.teams.all %}
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;{{ team.name|escape }}</p>
+            {% endfor %}
+            <br><br>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No hay reservas que coincidan con la busqueda solicitada</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>
