@@ -8,6 +8,7 @@ from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 from reservations.views import ReservationCreate, listReservations, markAsAttended, cancelReservation, searchReservation
 from courts.views import listCourt, updateCourt, deleteCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
+from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
 admin.autodiscover()
 
 
@@ -63,3 +64,10 @@ urlpatterns += patterns('proyectoFinal.tournaments.views',
 						url(r'^updatetournament/(?P<pk>\d+)/$', markAsFinished.as_view()),
 						url(r'^canceltournament/(?P<pk>\d+)/$', cancelTournament.as_view()),
 						url(r'^searchtournament/?$', 'searchTournament'),)
+
+urlpatterns += patterns('proyectoFinal.fixtures.views',
+						url(r'^newfixture/?$', FixtureCreate.as_view()),
+						url(r'^fixtures/?$', listFixtures.as_view()),
+						url(r'^updatefixture/(?P<pk>\d+)/$', updateFixture.as_view()),
+						url(r'^deletefixture/(?P<pk>\d+)/$', deleteFixture.as_view()),
+						url(r'^searchfixture/?$', 'searchFixtures'),)

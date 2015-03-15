@@ -1,7 +1,7 @@
 #from django.shortcuts import render
 from django.db.models import Q
 from django.shortcuts import render_to_response
-from models import Team , Match
+from models import Team , Match , Fixture
 
 from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
@@ -12,7 +12,7 @@ from django.contrib import admin
 
 class MatchCreate(CreateView):
 	model = Match
-	fields = ['day', 'hour', 'minutes', 'teamlocal' , 'teamVisitant']
+	fields = ['day', 'hour', 'minutes', 'teamlocal' , 'teamVisitant', 'fixture']
 	success_url = '/matches'
 
 class listMatches(ListView):
