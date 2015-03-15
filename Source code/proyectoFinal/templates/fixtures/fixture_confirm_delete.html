@@ -1,0 +1,6 @@
+<title>Delete Fixture</title>
+<h1>ELIMINAR FIXTURE</h1>
+<form action="" method="post">{% csrf_token %}
+    <p>¿ Esta seguro que quiere eliminar el fixture del dia <b>{{match.date}}</b> ?</p>
+    <input type="submit" value="Eliminar" />
+</form>

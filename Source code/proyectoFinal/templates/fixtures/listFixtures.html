@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Fixtures</title>
+</head>
+<body>	
+	<h1>Fixtures Registrados</h1>
+
+	<ul>
+		{% for fixture in fixtures %} <!--matches -> Nombre de la lista especificado en views.py -->
+			<li><b> Fecha de comienzo: </b> {{fixture.date}} </li>
+			
+			<br><br>
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>

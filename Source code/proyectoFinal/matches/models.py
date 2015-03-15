@@ -1,6 +1,7 @@
 from django.db import models
 
 from proyectoFinal.teams.models import Team
+from proyectoFinal.fixtures.models import Fixture
 
 class Match(models.Model):
 	minutes_choices = (
@@ -24,6 +25,7 @@ class Match(models.Model):
 	minutes = models.IntegerField(choices= minutes_choices,verbose_name='Minutos')
 	teamlocal = models.ForeignKey(Team, related_name='Equipo local' ,blank=True, null=True, on_delete=models.CASCADE,verbose_name='Nombre del equipo local')
 	teamVisitant = models.ForeignKey(Team, related_name='Equipo visitante' ,blank=True, null=True, on_delete=models.CASCADE,verbose_name='Nombre del equipo visitante')
+	fixture = models.ForeignKey(Fixture, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Fixture del torneo al que pertenece el partido')
 	
 	def __str__(self):
 		return '%s  %s' %(self.teamlocal.name,self.teamVisitant.name)
