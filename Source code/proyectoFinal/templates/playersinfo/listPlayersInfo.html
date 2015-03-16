@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Informacion del jugador</title>
+</head>
+<body>	
+	<h1>Estadisticas de jugador</h1>
+
+	<ul>
+		{% for playerinfo in playersinfo %} <!-- playersinfo -> Nombre de la lista especificado en views.py -->
+			<li><b> Nombre: </b> {{playerinfo.user}} </li>
+			<li><b> Goles: </b> {{playerinfo.goals}}</li>
+			<li><b> Tarjetas Amarillas: </b> {{playerinfo.yellowCards}} </li>
+			<li><b> Tarjetas Rojas: </b> {{playerinfo.redCards}} </li>
+			<li><b> Torneo en el que participa: </b> {{playerinfo.tournament}} </li>
+			<br><br>
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>
