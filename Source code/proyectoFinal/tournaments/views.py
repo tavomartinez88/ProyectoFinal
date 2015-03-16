@@ -8,7 +8,7 @@ from models import Tournament
 
 class TournamentCreate(CreateView):
 	model = Tournament
-	fields = ['name', 'teams', 'complex']
+	fields = ['name', 'teams', 'complex', 'fixture']
 	success_url = '/tournaments'
 
 class listTournaments(ListView):
@@ -18,7 +18,7 @@ class listTournaments(ListView):
 
 class markAsFinished(UpdateView):
 	model = Tournament
-	fields = ['inProgress', 'teams']
+	fields = ['inProgress', 'teams', 'fixture']
 	template_name_suffix = '_update_form' # This is: modelName_update_form.html
 	success_url = '/tournaments'
 
