@@ -1,0 +1,8 @@
+<title>Actualizar informacion de jugador</title>
+<h1>ACTUALIZAR INFORMACION DE JUGADOR</h1>
+<form action="" method="post">{% csrf_token %}
+	Nombre: {{playersinfo.user}}
+    {{ form.as_p }}
+    <br><br>
+    <input type="submit" value="Confirmar" />
+</form>

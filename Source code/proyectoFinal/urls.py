@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, include, url
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from complexes.views import listComplex,updateComplex, deleteComplex
 from teams.views import TeamCreate, listTeams, updateTeam, deleteTeam
@@ -9,6 +8,7 @@ from reservations.views import ReservationCreate, listReservations, markAsAttend
 from courts.views import listCourt, updateCourt, deleteCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
 from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
+from playersinfo.views import PlayersInfoCreate, listPlayersInfo, updatePlayerInfo, searchPlayerInfo
 admin.autodiscover()
 
 
@@ -71,3 +71,9 @@ urlpatterns += patterns('proyectoFinal.fixtures.views',
 						url(r'^updatefixture/(?P<pk>\d+)/$', updateFixture.as_view()),
 						url(r'^deletefixture/(?P<pk>\d+)/$', deleteFixture.as_view()),
 						url(r'^searchfixture/?$', 'searchFixtures'),)
+
+urlpatterns += patterns('proyectoFinal.playersinfo.views',
+						url(r'^addplayersinfo/?$', PlayersInfoCreate.as_view()),
+						url(r'^playersinfo/?$', listPlayersInfo.as_view()),
+						url(r'^updateplayerinfo/(?P<pk>\d+)/$', updatePlayerInfo.as_view()),
+						url(r'^searchplayerinfo/?$', 'searchPlayerInfo'),)
