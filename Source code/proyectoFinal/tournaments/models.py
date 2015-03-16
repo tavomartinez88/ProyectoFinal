@@ -10,3 +10,6 @@ class Tournament(models.Model):
 	teams = models.ManyToManyField(Team, verbose_name='Equipos participantes')
 	complex = models.ForeignKey(Complex, verbose_name='Complejo organizador') 
 	fixture = models.ForeignKey(Fixture, null='True', blank='True')
+
+	def __str__(self):
+		return '%s' %(self.name)
