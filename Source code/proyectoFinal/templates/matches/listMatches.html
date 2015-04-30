@@ -9,7 +9,7 @@
 
 	<ul>
 		{% for match in matches %} <!--matches -> Nombre de la lista especificado en views.py -->
-			<li><b> Fecha del Partido: </b> {{match.date}} </li>
+			<li><b> Fecha del Partido: </b> {{match.day}} </li>
 			<li><b> Hora: </b> {{match.hour}}:{{match.minutes}} </li>
 			<li><b> Resultado: </b> {{match.score}}</li>
 			<li><b> Equipo local: </b> {{match.teamlocal.name}} </li>

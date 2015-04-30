@@ -1,0 +1,31 @@
+<title>Inicio</title>
+<center>
+<h1>BIENVENIDO</h1>
+  {% if user.is_authenticated %}
+    <h3>{{user.first_name}}</h3><br><br>
+    <a href="newreservation">Reservar turno</a><br><br><br><br>
+    {% if user.is_staff %}
+      <table>
+        <tr>
+          <td><a href="newtournament" class="reg">Crear torneo</a></td>
+          <td><a href="newfixture" class="reg">Añadir fixture</a></td>
+          <td><a href="newcomplex" class="reg">Añadir complejo</a></td>
+        </tr>
+      </table>
+    {% endif %}
+  <br><br><br>
+  {% else %}
+  <h3><a href="/login/" class="">Iniciar Sesión</a></h3>
+  <br><br><br>
+  {% endif %}
+  	<table>
+  		<tr>
+			<td><a href="/complexes/" class="reg">Complejos</a></td>
+    		<td><a href="/tournaments/" class="reg">Torneos</a></td>
+    	</tr>
+    	<tr>
+    		<td><a href="/teams/" class="reg">Equipos</a></td>
+			<td><a href="/courts/" class="reg">Canchas</a></td>
+    	</tr>
+  	</table>
+  </center>

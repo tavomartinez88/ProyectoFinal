@@ -9,11 +9,14 @@ from courts.views import listCourt, updateCourt, deleteCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
 from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
 from playersinfo.views import PlayersInfoCreate, listPlayersInfo, updatePlayerInfo, searchPlayerInfo
+from django.views.generic import TemplateView 
 admin.autodiscover()
 
-
 urlpatterns = patterns('',
-	    				url(r'^admin/', include(admin.site.urls)),)
+	    				url(r'^admin/', include(admin.site.urls)),
+	    				(r'^$', TemplateView.as_view(template_name="index.html")),
+	    				url(r'^login/$', 'proyectoFinal.views.login_page', name="login"),
+	    				url(r'^salir/$', 'proyectoFinal.views.logout_page', name="logout"),)
 
 urlpatterns += patterns('proyectoFinal.users.views',
 						url(r'^register/?$', 'register'),

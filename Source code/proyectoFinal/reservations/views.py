@@ -6,11 +6,23 @@ from django.core.context_processors import csrf # to increase security in the si
 from django.template import RequestContext
 from models import Reservation
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 class ReservationCreate(CreateView):
 	model = Reservation
-	fields = ['date', 'hour', 'minutes', 'user', 'court']
+	fields = ['date', 'hour', 'minutes', 'court']
 	success_url = '/reservations'
+
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    	    return super(ReservationCreate, self).dispatch(*args, **kwargs)
+
+	#set the user that's logged in as the user that make the reservation
+	def form_valid(self, form):
+    		form.instance.user = self.request.user
+    		return super(ReservationCreate, self).form_valid(form)
 
 class listReservations(ListView):
 	template_name = 'reservations/listReservations.html'
