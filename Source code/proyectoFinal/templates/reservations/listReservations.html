@@ -11,7 +11,7 @@
 		{% for reservation in reservations %} <!-- reservations -> Nombre de la lista especificado en views.py -->
 			<li><b> Fecha de la Reserva: </b> {{reservation.date}} </li>
 			<li><b> Hora: </b> {{reservation.hour}}:{{reservation.minutes}} </li>
-			<li><b> Realizada por: </b> {{reservation.user}} </li>
+			<li><b> Realizada por: </b> {{reservation.user.first_name}} {{reservation.user.last_name}} </li>
 			<li><b> Cancha Reservada: </b> {{reservation.court}} </li>
 			<li><b> Asistió?: </b> {{reservation.attended|yesno:"Si,No"}} </li>
 			<br><br>

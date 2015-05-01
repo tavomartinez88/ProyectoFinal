@@ -1,0 +1,22 @@
+<title>Bienvenido</title>
+{% if user.is_authenticated %}
+    <p>Bienvenido, {{ user.first_name }}.</p>
+    <a href="/newcomplex/" class="">Agregar nuevo complejo</a><br>
+    <a href="/newteam/" class="">Agregar nuevo equipo</a><br>
+    <a href="/newreservation/" class="">Realizar reserva</a><br><br>
+    <!-- get_profile returns the UserProfile corresponding to the user logged in -->
+    <a href="/delete_user/{{user.get_profile.id}}/">Eliminar mi cuenta</a><br><br><br><br><br><br>
+{% else %}
+    <p>Bienvenido. Por favor, inicia sesión.</p>
+{% endif %}
+  {% if user.is_authenticated %}
+    <a href="/salir/">Cerrar Sesión</a>
+{% else %}  
+  <form class="" method="POST">{% csrf_token %}
+    Usuario <input name="username" type="text" id="inputEmail" placeholder="Usuario"><br><br>
+    Contraseña <input name="password" type="password" id="inputPassword" placeholder="Contraseña"><br><br>
+    <input type="checkbox">Recordar</label>
+    <button type="submit" class="">Ingresar</button><br><br>
+    <a href="/register/" class="">Registrarse</a>
+  </form>
+{% endif %}

@@ -1,8 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 from proyectoFinal.telephones.models import Telephone
 from proyectoFinal.citys.models import City
 
-class User(models.Model):
+class UserProfile(models.Model):
 	COMUN = 'CM'
 	PROPIETARIO = 'PR'
 	firstname = models.CharField(max_length=40, verbose_name='Nombre')
@@ -12,6 +13,7 @@ class User(models.Model):
 	password = models.CharField(max_length=60, verbose_name='Contrasena')
 	telephone = models.OneToOneField(Telephone, unique=False, verbose_name='Telefono')
 	city = models.ForeignKey(City, verbose_name='Ciudad')
+	user = models.ForeignKey(User) # Extends the default User model provided by Django
 	userType_choices = (
 		(COMUN, 'Usuario comun'),
 		(PROPIETARIO, 'Propietario de complejo')
@@ -23,4 +25,3 @@ class User(models.Model):
 
 	def __unicode__(self):
 		return ' %s %s' % (self.firstname, self.lastname)
-

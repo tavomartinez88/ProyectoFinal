@@ -1,0 +1,11 @@
+<title>Eliminar Usuario</title>
+<h1>ELIMINAR USUARIO</h1>
+{% if user.is_authenticated %}
+<form action="" method="post">{% csrf_token %}
+	<p>Estimado {{user.get_full_name}}:</p>
+    <p>Esta seguro que quiere eliminar su cuenta??</p>
+    <input type="submit" value="Eliminar" />
+</form>
+{% else %}
+ <p>Usted no cuenta con los permisos necesarios para llevar a cabo esta operacion</p>
+{% endif %}

@@ -1,7 +1,11 @@
 <title>Crear Torneo</title>
+{% if user.is_staff %}
 <h1>CREAR TORNEO</h1>
 
 <form action="" method="post">{% csrf_token %}
      {{ form.as_p }} 
     <input type="submit" value="Crear" />
 </form>
+{% else %}
+<h1>PERMISO DENEGADO</h1>
+{% endif %}

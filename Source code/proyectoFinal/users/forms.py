@@ -1,9 +1,9 @@
 from django import forms
-from models import User, Telephone
+from models import UserProfile, Telephone
 
 class UserForm(forms.ModelForm):
 	class Meta: 
-		model = User
+		model = UserProfile
 		widgets = {
         	'password': forms.PasswordInput(), # Hide the entered information 
     	}

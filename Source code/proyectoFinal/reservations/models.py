@@ -1,6 +1,8 @@
 from django.db import models
-from proyectoFinal.users.models import User
+from django.conf import settings
+from proyectoFinal.users.models import UserProfile
 from proyectoFinal.courts.models import Court
+from django.contrib.auth.models import User
 
 class Reservation(models.Model):
 	minutes_choices = (

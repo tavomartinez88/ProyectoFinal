@@ -5,12 +5,17 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.core.context_processors import csrf # to increase security in the site
 from django.template import RequestContext
-from proyectoFinal.users.models import User
+from proyectoFinal.users.models import UserProfile
 
 class TeamCreate(CreateView):
 	model = Team
-	fields = ['name', 'captain', 'players']
+	fields = ['name', 'players']
 	success_url = '/teams'
+
+	#set the user that's logged in as the captain
+	def form_valid(self, form):
+    		form.instance.captain = self.request.user
+    		return super(TeamCreate, self).form_valid(form)
 
 class listTeams(ListView):
 	template_name = 'teams/listTeams.html'
