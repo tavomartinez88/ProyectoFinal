@@ -28,22 +28,6 @@ class CreateCourt(CreateView):
     	    return super(CreateCourt, self).dispatch(*args, **kwargs)
 
 
-
-
-
-def register(request):
-	if request.POST:
-		form = CourtForm(request.POST) #create a UserForm
-		
-		if form.is_valid(): #if the information in the form its correct
-						
-			form.save() #save the user model
-			return HttpResponseRedirect('/courts')
-	else:
-		form = CourtForm()
-		
-	return render_to_response('courts/register.html', {'form': form}, RequestContext(request, {}))
-
 class listCourt(ListView):
 	template_name = 'courts/listCourts.html'
 	model = Court
