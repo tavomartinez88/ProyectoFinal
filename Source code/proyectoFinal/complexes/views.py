@@ -2,6 +2,9 @@
 from django.db.models import Q
 from django.shortcuts import render_to_response
 from models import Complex , User
+from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from forms import ComplexForm
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, UpdateView, DeleteView
@@ -41,7 +44,7 @@ def register(request):
 		  add=cform.save()
 		  add2=Complex.objects.get(id=add.id)
 		  #aqui se deberia reemplazar el 1 por el numero de id del usuario logueado
-		  ident = User.objects.get(id=1)
+		  ident = User.objects.get(id = request.user.id)
 		  add2.user_id = ident.id
 		  add2.save()
 		  return HttpResponseRedirect('/complexes')
