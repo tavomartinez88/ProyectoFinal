@@ -21,7 +21,7 @@ urlpatterns = patterns('',
 urlpatterns += patterns('proyectoFinal.users.views',
 						url(r'^register/?$', 'register'),
 						url(r'^users/?$', listUser.as_view()),
-						url(r'^update_user/(?P<pk>\d+)/$', userUpdate.as_view()), #(?P<pk>\d+) -> ID for the user. This has to be changed when the login implemented
+						url(r'^update_user/(?P<pk>\d+)/$', userUpdate.as_view(),name='updateuser'), #(?P<pk>\d+) -> ID for the user. This has to be changed when the login implemented
 						url(r'^update_telephone/(?P<pk>\d+)/$', telephoneUpdate.as_view()),
 						url(r'^delete_user/(?P<pk>\d+)/$', deleteUser.as_view()),
 						url(r'^searchuser/?$', 'searchUser'),) 

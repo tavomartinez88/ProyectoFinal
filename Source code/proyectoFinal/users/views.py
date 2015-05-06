@@ -9,6 +9,10 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.core.urlresolvers import reverse
+
 
 
 def register(request):
@@ -47,16 +51,58 @@ class userUpdate(UpdateView):
 	fields = ['email', 'city', 'password', 'userType']
 	template_name_suffix = '_update_form'
 	success_url = '/users' #redirect when the edit form is filled
+	def get_form_kwargs(self):
+			kwargs = super(userUpdate, self).get_form_kwargs()
+			return kwargs		
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(userUpdate, self).dispatch(*args, **kwargs)
+
+	
+	def get_object(self,queryset=None):
+	   	usuario = super(userUpdate, self).get_object()
+	   	if not usuario.user == self.request.user:
+	   		raise Http404
+	   	return usuario
+
 
 class telephoneUpdate(UpdateView):
 	model = Telephone
 	fields = ['number',]
 	template_name_suffix = '_update_form'
-	success_url = '/update_user/1' #redirect when the edit form is filled
+	success_url = None
+	def get_success_url(self):
+		#updateuser it's tag of route /update_user/id in url.py
+		return reverse("updateuser",args=str(self.request.user.id-1))
+
+	def get_form_kwargs(self):
+				kwargs = super(telephoneUpdate, self).get_form_kwargs()
+				return kwargs		
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(telephoneUpdate, self).dispatch(*args, **kwargs)
+
+	
+	def get_object(self,queryset=None):
+	   	tel = super(telephoneUpdate, self).get_object()
+	   	usuario = UserProfile.objects.get(telephone_id = tel.id)
+	   	if not usuario.user == self.request.user:
+	   		raise Http404
+	   	return tel
 
 class deleteUser(DeleteView):
 	model = UserProfile
 	success_url = '/users'
+	def get_form_kwargs(self):
+				kwargs = super(deleteUser, self).get_form_kwargs()
+				return kwargs		
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(deleteUser, self).dispatch(*args, **kwargs)
+
 	def get_object(self, queryset=None):
 	  #select the user object that we want to delete
   	  obj = super(deleteUser, self).get_object()
