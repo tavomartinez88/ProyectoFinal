@@ -28,6 +28,8 @@ urlpatterns += patterns('proyectoFinal.users.views',
 
 urlpatterns += patterns('proyectoFinal.complexes.views',
 						url(r'^newcomplex/?$', 'register'),
+						url(r'^updatecomplexes/?$', 'updatecomplexes'),
+						url(r'^deletecomplexes/?$', 'deletecomplexes'),
 						url(r'^searchcomplex/?$', 'search_complex'),
 						url(r'^complexes/?$', listComplex.as_view()),
 						url(r'^updatecomplex/(?P<pk>\d+)/$', updateComplex.as_view()),
@@ -38,6 +40,8 @@ urlpatterns += patterns('proyectoFinal.courts.views',
 						url(r'^searchcourt/?$', 'search_court'),
 						url(r'^courts/?$', listCourt.as_view()),
 						url(r'^editCourt/(?P<pk>\d+)/$', updateCourt.as_view()),
+						url(r'^updatecourts/?$', 'updatecourts'),
+						url(r'^deletecourts/?$', 'deletecourts'),
 						url(r'^deletecourt/(?P<pk>\d+)/$', deleteCourt.as_view()),) 
 
 urlpatterns += patterns('proyectoFinal.teams.views',
@@ -45,14 +49,19 @@ urlpatterns += patterns('proyectoFinal.teams.views',
 						url(r'^teams/?$', listTeams.as_view()),
 						url(r'^updateteam/(?P<pk>\d+)/$', updateTeam.as_view()),
 						url(r'^deleteteam/(?P<pk>\d+)/$', deleteTeam.as_view()),
-						url(r'^searchteam/?$', 'searchTeam'),)
+						url(r'^searchteam/?$', 'searchTeam'),
+						url(r'^updateteams/?$', 'updateteams'),
+						url(r'^deleteteams/?$', 'deleteteams'),)
+
 
 urlpatterns += patterns('proyectoFinal.reservations.views',
 						url(r'^newreservation/?$', ReservationCreate.as_view()),
 						url(r'^reservations/?$', listReservations.as_view()),
 						url(r'^updatereservation/(?P<pk>\d+)/$', markAsAttended.as_view()),
 						url(r'^cancelreservation/(?P<pk>\d+)/$', cancelReservation.as_view()),
-						url(r'^searchreservation/?$', 'searchReservation'),)
+						url(r'^searchreservation/?$', 'searchReservation'),
+						url(r'^updatereservations/?$', 'updatereservations'),
+						url(r'^deletereservations/?$', 'deletereservations'),)
 
 urlpatterns += patterns('proyectoFinal.matches.views',
 						url(r'^newmatch/?$', MatchCreate.as_view()),

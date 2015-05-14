@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Equipos</title>
+</head>
+<body>	
+	<h1>Equipos Para Eliminar</h1>
+	
+		<ul>
+			{% for team in teams %} 
+				<li>Nombre : {{team.name}} | Capitan : {{team.captain}}   <a href="/deleteteam/{{team.id}}/"><button>Eliminar</button></a></li>
+				<br><br>
+			{% endfor %}
+		</ul>
+	
+</body>
+</html>

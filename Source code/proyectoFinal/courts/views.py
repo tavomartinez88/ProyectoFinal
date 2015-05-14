@@ -66,6 +66,14 @@ class updateCourt(UpdateView):
 
 
 
+def updatecourts(request):
+  courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
+  return render_to_response('courts/updateAnyCourts.html',{'courts': courts})
+
+def deletecourts(request):
+  courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
+  return render_to_response('courts/deleteAnyCourts.html',{'courts': courts})  
+
 
 def search_court(request):
   query = request.GET.get('q', '')

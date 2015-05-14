@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Canchas</title>
+</head>
+<body>	
+	<h1>Canchas Para Eliminar</h1>
+	<ul>
+		{% for court in courts %} <!-- users -> Nombre de la lista especificado en views.py -->
+			<li>Complejo :{{court.complex.name}}</li>
+			<li>Luz artificial :{{court.artificial_light|yesno:"Si,No"}}</li>
+			<li>Tipo de piso :{{court.get_lawnType_display|yesno:"Si,No"}}</li>
+			<li>Tipo de cancha :{{court.get_soccerType_display|yesno:"Si,No"}}</li>
+			<br>
+			<a href="/deleteCourt/{{court.id}}/"><button>Eliminar</button></a>
+			<hr>
+		{% endfor %}
+	</ul>
+		
+	
+</body>
+</html>

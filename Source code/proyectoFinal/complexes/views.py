@@ -2,6 +2,7 @@
 from django.db.models import Q
 from django.shortcuts import render_to_response
 from models import Complex , User
+from proyectoFinal.users.models import UserProfile
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -9,6 +10,9 @@ from forms import ComplexForm
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, UpdateView, DeleteView
 from django.core.context_processors import csrf # to increase security in the page
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.http import Http404
 
 class listComplex(ListView):
 	template_name = 'complexes/listComplexes.html'
@@ -30,6 +34,24 @@ def search_complex(request):
 class deleteComplex(DeleteView):
   model = Complex
   success_url = '/complexes'
+  def get_form_kwargs(self):
+  	kwargs = super(deleteComplex, self).get_form_kwargs()
+  	#kwargs.update({'user': self.request.user})
+  	return kwargs
+
+
+  @method_decorator(login_required)
+  def dispatch(self, *args, **kwargs):
+    return super(deleteComplex, self).dispatch(*args, **kwargs)
+
+  def get_object(self, queryset=None):
+    #select the court object that we want to update
+    complejo = super(deleteComplex, self).get_object()
+    #select the user in base of the complex
+    usuario = UserProfile.objects.get(user_id = complejo.user_id)
+    if not usuario.user == self.request.user and usuario.userType == 'PR':
+        raise Http404
+    return complejo     
   
 
 def register(request):
@@ -57,6 +79,14 @@ def register(request):
 	args['cform'] = cform
 	return render_to_response('complexes/register.html', args)
 
+def updatecomplexes(request):
+	complexes = Complex.objects.filter(user = request.user.id)
+	return render_to_response('complexes/updateAnyComplexes.html',{'complexes': complexes})
+
+def deletecomplexes(request):
+	complexes = Complex.objects.filter(user = request.user.id)
+	return render_to_response('complexes/deleteAnyComplexes.html',{'complexes': complexes})	
+
 
 class updateComplex(UpdateView):
   model = Complex
@@ -64,7 +94,26 @@ class updateComplex(UpdateView):
   template_name_suffix = '_update_complex'
   success_url = '/complexes' #redirect when the edit form is filled
 
+  def get_form_kwargs(self):
+  	kwargs = super(updateComplex, self).get_form_kwargs()
+  	#kwargs.update({'user': self.request.user})
+  	return kwargs
 
 
-# Create your views here.
+  @method_decorator(login_required)
+  def dispatch(self, *args, **kwargs):
+    return super(updateComplex, self).dispatch(*args, **kwargs)
+
+  def get_object(self, queryset=None):
+    #select the court object that we want to update
+    complejo = super(updateComplex, self).get_object()
+    #select the user in base of the complex
+    usuario = UserProfile.objects.get(user_id = complejo.user_id)
+    if not usuario.user == self.request.user and usuario.userType == 'PR':
+        raise Http404
+    return complejo    
+
+
+
+
 

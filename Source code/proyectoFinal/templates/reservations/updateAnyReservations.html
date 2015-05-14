@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Canchas</title>
+</head>
+<body>	
+	<h1>Reservaciones Para Actualizar</h1>
+	<ul>
+		{% for complex in complejo %} <!-- users -> Nombre de la lista especificado en views.py -->
+			<li>Complejo :{{complex.name}}</li>
+			{% for reservation in reservations %} <!-- users -> Nombre de la lista especificado en views.py -->
+				<li>Reservada :{{reservation.attended|yesno:"Si,No"}}</li>
+				<li>Hora :{{reservation.hour}}</li>
+				<li>Minuto :{{reservation.minutes}}</li>
+				<li>Usuario :{{reservation.user.get_full_name}}</li>
+				<br>
+				<a href="/updatereservation/{{reservation.id}}/"><button>Actualizar</button></a>
+				<hr>
+			{% endfor %}	
+		{% endfor %}
+	</ul>
+		
+	
+</body>
+</html>
+
+
