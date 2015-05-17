@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Complejos</title>
+</head>
+<body>	
+	<h1>Complejos Para Actualizar</h1>
+  
+		<ul>
+			{% for complex in complexes %} 
+				<li>{{complex.name}}   <a href="/updatecomplex/{{complex.id}}/"><button>Editar</button></a></li>
+				<br><br>
+			{% endfor %}
+		</ul>
+  {% else %}
+  	<p>acceso denegado</p>
+
+	
+</body>
+</html>

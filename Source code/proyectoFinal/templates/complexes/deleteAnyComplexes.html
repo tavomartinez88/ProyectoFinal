@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Complejos</title>
+</head>
+<body>	
+	<h1>Complejos Para Eliminar</h1>
+
+	<ul>
+		{% for complex in complexes %} <!-- users -> Nombre de la lista especificado en views.py -->
+			<li>{{complex.name}}   <a href="/deletecomplex/{{complex.id}}/"><button>Eliminar</button></a></li>
+			<br><br>
+		{% endfor %}
+	</ul>
+
+</body>
+</html>

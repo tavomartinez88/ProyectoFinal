@@ -5,11 +5,24 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.core.context_processors import csrf # to increase security in the site
 from django.template import RequestContext
 from models import Tournament
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from forms import TournamentForm
 
 class TournamentCreate(CreateView):
 	model = Tournament
-	fields = ['name', 'teams', 'complex', 'fixture']
 	success_url = '/tournaments'
+	form_class = TournamentForm
+
+	def get_form_kwargs(self):
+    		kwargs = super(TournamentCreate, self).get_form_kwargs()
+    		kwargs.update({'user': self.request.user})
+    		return kwargs
+
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    	    return super(TournamentCreate, self).dispatch(*args, **kwargs)
 
 class listTournaments(ListView):
 	template_name = 'tournaments/listTournaments.html'
