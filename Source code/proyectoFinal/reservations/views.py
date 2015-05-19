@@ -28,9 +28,7 @@ class ReservationCreate(CreateView):
     		form.instance.user = self.request.user
     		return super(ReservationCreate, self).form_valid(form)
 	
-	def get_object(self,user):
-			court = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
-			return court
+
 
 class listReservations(ListView):
 	template_name = 'reservations/listReservations.html'
