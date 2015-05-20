@@ -34,7 +34,9 @@ class listCourt(ListView):
 	template_name = 'courts/listCourts.html'
 	model = Court
 	context_object_name = 'courts' # Nombre de la lista a recorrer desde listUsers.html
-
+        def get_queryset(self):
+          return Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))
+          
 
 class updateCourt(UpdateView):
   model = Court

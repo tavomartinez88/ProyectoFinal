@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Partidos listados</title>
+</head>
+<body>	
+	<h1>Partidos en juego del fixture</h1>
+
+	<ul>
+		<li><b> Nombre del Fixture: </b> {{fix.name}} </li>
+		<br/>
+		{% for match in partidos %}
+			<li>Local : <b> {{match.teamlocal.name}}</b> vs Visitante : <b> {{match.teamVisitant.name}}</b> 
+			<a href="/addscore/{{match.id}}"><button>Agregar resultado</button></a></li>
+			
+			
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>

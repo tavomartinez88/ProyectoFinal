@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from complexes.views import listComplex,updateComplex, deleteComplex
 from teams.views import TeamCreate, listTeams, updateTeam, deleteTeam
-from matches.views import MatchCreate, listMatches , deleteMatch , addResult
+from matches.views import listMatches , deleteMatch , addResult
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 from reservations.views import ReservationCreate, listReservations, markAsAttended, cancelReservation, searchReservation
 from courts.views import listCourt, updateCourt, deleteCourt, CreateCourt
@@ -64,7 +64,7 @@ urlpatterns += patterns('proyectoFinal.reservations.views',
 						url(r'^deletereservations/?$', 'deletereservations'),)
 
 urlpatterns += patterns('proyectoFinal.matches.views',
-						url(r'^newmatch/?$', MatchCreate.as_view()),
+						url(r'^addmatch/(?P<idfixture>\d+)','addmatch',name="addmatch"),
 						url(r'^matches/?$', listMatches.as_view()),
 						url(r'^deletematch/(?P<pk>\d+)/$', deleteMatch.as_view()),
 						url(r'^addscore/(?P<pk>\d+)/$', addResult.as_view()),
@@ -77,12 +77,16 @@ urlpatterns += patterns('proyectoFinal.tournaments.views',
 						url(r'^canceltournament/(?P<pk>\d+)/$', cancelTournament.as_view()),
 						url(r'^searchtournament/?$', 'searchTournament'),)
 
+
+
+
 urlpatterns += patterns('proyectoFinal.fixtures.views',
 						url(r'^newfixture/?$', FixtureCreate.as_view()),
 						url(r'^fixtures/?$', listFixtures.as_view()),
 						url(r'^updatefixture/(?P<pk>\d+)/$', updateFixture.as_view()),
 						url(r'^deletefixture/(?P<pk>\d+)/$', deleteFixture.as_view()),
-						url(r'^searchfixture/?$', 'searchFixtures'),)
+						url(r'^searchfixture/?$', 'searchFixtures'),
+						url(r'^listmatchesforfixture/(?P<idfixture>\d+)','listMatchForFixture',name="list_matches"),)
 
 urlpatterns += patterns('proyectoFinal.playersinfo.views',
 						url(r'^addplayersinfo/?$', PlayersInfoCreate.as_view()),

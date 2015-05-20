@@ -10,11 +10,13 @@
 	<ul>
 		{% for fixture in fixtures %} <!--matches -> Nombre de la lista especificado en views.py -->
 			<li><b> Fecha de comienzo: </b> {{fixture.date}} </li>
-			{{ matches }}
-			{% for match in matches %}
-				<li><b> Partido: </b> {{ matches }} </li>
-			{% endfor %}
+			<li><b> Nombre del Fixture: </b> {{fixture.name}} </li>
+			<li><a href="updatefixture/{{fixture.id}}"><button>actualizar fixture</button></a></li>
+			<li><a href="deletefixture/{{fixture.id}}"><button>eliminar fixture</button></a></li>
+			<li><a href="listmatchesforfixture/{{fixture.id}}"><button>ver fixture</button></a></li>
+			<li><a href="addmatch/{{fixture.id}}"><button>agregar partido</button></a></li>
 			<br><br>
+			<hr/>
 		{% endfor %}
 	</ul>
 	<br><br><br><br>
