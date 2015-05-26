@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Equipos Inscriptos</title>
+</head>
+<body>	
+	<h1>Elija el equipo al cual pertenece el jugador a modificar</h1>
+
+	<ul>
+		<br/>
+		{% for team in equipos %}
+			<li>Nombre del equipo: <b> {{team.name}}</b>
+			<a href="/playersFromTeam/{{team.id}}"><button>Editar informacion</button></a></li>			
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>

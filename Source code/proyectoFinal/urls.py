@@ -89,7 +89,11 @@ urlpatterns += patterns('proyectoFinal.fixtures.views',
 						url(r'^listmatchesforfixture/(?P<idfixture>\d+)','listMatchForFixture',name="list_matches"),)
 
 urlpatterns += patterns('proyectoFinal.playersinfo.views',
-						url(r'^addplayersinfo/?$', PlayersInfoCreate.as_view()),
+						url(r'^addplayersinfo/(?P<pk>\d+)/$', PlayersInfoCreate.as_view()),
 						url(r'^playersinfo/?$', listPlayersInfo.as_view()),
 						url(r'^updateplayerinfo/(?P<pk>\d+)/$', updatePlayerInfo.as_view()),
-						url(r'^searchplayerinfo/?$', 'searchPlayerInfo'),)
+						url(r'^searchplayerinfo/?$', 'searchPlayerInfo'),
+						url(r'^tournamentsplayersinfo/?$', 'listTournamentsForPlayersInfo'),
+						url(r'^teamsFromTournament/(?P<idtournament>\d+)/$', 'listTeamsFromTournament'),
+						url(r'^playersFromTeam/(?P<idteam>\d+)/$', 'playersFromTeam'),
+						url(r'^editPlayer/(?P<userid>\d+)/$', 'get_playerinfo_from_userid'),)

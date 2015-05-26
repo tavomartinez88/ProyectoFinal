@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Torneos</title>
+</head>
+<body>	
+	<h1>Elija el torneo al cual pertenece el jugador cuyas estadisticas desea modificar</h1>
+
+	<ul>
+		<br/>
+		{% for tournament in torneos %}
+			<li>Nombre del torneo : <b> {{tournament.name}}</b>
+			<a href="/teamsFromTournament/{{tournament.id}}"><button>Editar informacion</button></a></li>			
+		{% endfor %}
+	</ul>
+	<br><br><br><br>
+	<ul>
+
+</body>
