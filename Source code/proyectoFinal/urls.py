@@ -8,7 +8,7 @@ from reservations.views import ReservationCreate, listReservations, markAsAttend
 from courts.views import listCourt, updateCourt, deleteCourt, CreateCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
 from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
-from playersinfo.views import PlayersInfoCreate, listPlayersInfo, updatePlayerInfo, searchPlayerInfo
+from playersinfo.views import listPlayersInfo, updatePlayerInfo, searchPlayerInfo
 from django.views.generic import TemplateView 
 admin.autodiscover()
 
@@ -89,11 +89,12 @@ urlpatterns += patterns('proyectoFinal.fixtures.views',
 						url(r'^listmatchesforfixture/(?P<idfixture>\d+)','listMatchForFixture',name="list_matches"),)
 
 urlpatterns += patterns('proyectoFinal.playersinfo.views',
-						url(r'^addplayersinfo/(?P<pk>\d+)/$', PlayersInfoCreate.as_view()),
 						url(r'^playersinfo/?$', listPlayersInfo.as_view()),
 						url(r'^updateplayerinfo/(?P<pk>\d+)/$', updatePlayerInfo.as_view()),
 						url(r'^searchplayerinfo/?$', 'searchPlayerInfo'),
 						url(r'^tournamentsplayersinfo/?$', 'listTournamentsForPlayersInfo'),
 						url(r'^teamsFromTournament/(?P<idtournament>\d+)/$', 'listTeamsFromTournament'),
 						url(r'^playersFromTeam/(?P<idteam>\d+)/$', 'playersFromTeam'),
-						url(r'^editPlayer/(?P<userid>\d+)/$', 'get_playerinfo_from_userid'),)
+						url(r'^editPlayer/(?P<userid>\d+)/$', 'get_playerinfo_from_userid'),
+						url(r'^addplayerinfo/(?P<idplayer>\d+)','addplayerinfo',name="addplayerinfo"),
+						url(r'^info/(?P<idplayer>\d+)','info',name="info"),)
