@@ -66,8 +66,8 @@ def register(request):
 		  add=cform.save()
 		  add2=Complex.objects.get(id=add.id)
 		  #aqui se deberia reemplazar el 1 por el numero de id del usuario logueado
-		  ident = UserProfile.objects.get(id = request.user.id)
-		  add2.user_id = ident.id
+		  ident = UserProfile.objects.get(user_id = request.user.id)
+		  add2.user_id = ident.user_id
 		  add2.save()
 		  return HttpResponseRedirect('/complexes')
 
@@ -80,7 +80,7 @@ def register(request):
 	return render_to_response('complexes/register.html', args)
 
 def updatecomplexes(request):
-	complexes = Complex.objects.filter(user = request.user.id)
+	complexes = Complex.objects.filter(user = request.user)
 	return render_to_response('complexes/updateAnyComplexes.html',{'complexes': complexes})
 
 def deletecomplexes(request):

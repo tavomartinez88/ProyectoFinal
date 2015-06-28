@@ -11,7 +11,7 @@
 		<br/>
 		{% for team in equipos %}
 			<li>Nombre del equipo: <b> {{team.name}}</b>
-			<a href="/playersFromTeam/{{team.id}}"><button>Editar informacion</button></a></li>			
+			<a href="/playersFromTeam/{{team.id}}/{{idtournament}}"><button>Editar informacion</button></a></li>			
 		{% endfor %}
 	</ul>
 	<br><br><br><br>
