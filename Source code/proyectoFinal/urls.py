@@ -90,11 +90,11 @@ urlpatterns += patterns('proyectoFinal.fixtures.views',
 
 urlpatterns += patterns('proyectoFinal.playersinfo.views',
 						url(r'^playersinfo/?$', listPlayersInfo.as_view()),
-						url(r'^updateplayerinfo/(?P<pk>\d+)/$', updatePlayerInfo.as_view()),
 						url(r'^searchplayerinfo/?$', 'searchPlayerInfo'),
 						url(r'^tournamentsplayersinfo/?$', 'listTournamentsForPlayersInfo'),
 						url(r'^teamsFromTournament/(?P<idtournament>\d+)/$', 'listTeamsFromTournament'),
-						url(r'^playersFromTeam/(?P<idteam>\d+)/$', 'playersFromTeam'),
+						url(r'^playersFromTeam/(?P<idteam>\d+)/(?P<idtournament>\d+)/$', 'playersFromTeam'),
 						url(r'^editPlayer/(?P<userid>\d+)/$', 'get_playerinfo_from_userid'),
-						url(r'^addplayerinfo/(?P<idplayer>\d+)','addplayerinfo',name="addplayerinfo"),
-						url(r'^info/(?P<idplayer>\d+)','info',name="info"),)
+						url(r'^addplayerinfo/(?P<idplayer>\d+)/(?P<idtournament>\d+)$','addplayerinfo',name="addplayerinfo"),
+						url(r'^updateplayerinfo/(?P<idplayer>\d+)/(?P<idtournament>\d+)$', 'updateplayerinfo',name="updateplayerinfo"),
+						url(r'^info/(?P<idplayer>\d+)/(?P<idtournament>\d+)$','info',name="info"),)

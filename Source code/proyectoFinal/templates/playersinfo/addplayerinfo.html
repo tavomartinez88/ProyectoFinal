@@ -1,7 +1,8 @@
 <!doctype html>
 <title>Registro nueva info</title>
 <h1>REGISTRAR INFO</h1>
-<form action="/addplayerinfo/{{player_id.user_id}}" method="POST">{% csrf_token %}
+<form action="/addplayerinfo/{{player_id.user_id}}/{{idtournament}}" method="POST">
+{% csrf_token %}
 <ul>
 	{{mform.as_ul}}
 	

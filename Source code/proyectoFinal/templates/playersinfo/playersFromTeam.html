@@ -10,7 +10,7 @@
 	<ul>
 		<br/>
 		{% for player in jugadores %}
-			<li>Nombre : <b> {{player}}</b><a href="/info/{{player.id}}"><button>Editar informacion</button></a></li>
+			<li>Nombre : <b> {{player}}</b><a href="/info/{{player.id}}/{{idtournament}}"><button>Editar informacion</button></a></li>
 		{% endfor %}
 	</ul>
 	<br><br><br><br>
