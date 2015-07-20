@@ -17,7 +17,6 @@ class ReservationCreate(CreateView):
 	fields = ['date', 'hour', 'minutes', 'court']
 	success_url = '/reservations'
 	
-
 	#restricted area for anonymous users
 	@method_decorator(login_required)
     	def dispatch(self, *args, **kwargs):
@@ -28,16 +27,17 @@ class ReservationCreate(CreateView):
     		form.instance.user = self.request.user
     		return super(ReservationCreate, self).form_valid(form)
 	
-
-
 class listReservations(ListView):
 	template_name = 'reservations/listReservations.html'
 	model = Reservation
 	context_object_name = 'reservations' # Nombre de la lista a recorrer desde listReservations.html
 
+	def get_queryset(self):
+		return Reservation.objects.filter(user_id=self.request.user)
+
+
 def updatereservations(request):
-	
-	if request.user.is_staff == True:
+	if request.user.is_staff:
 		complejo = Complex.objects.filter(user=request.user.id)
 		court = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
 		reservations = Reservation.objects.filter(court=court, attended = False)
@@ -46,8 +46,7 @@ def updatereservations(request):
 		raise Http404
 
 def deletereservations(request):
-	
-	if request.user.is_staff == True:
+	if request.user.is_staff:
 		complejo = Complex.objects.filter(user=request.user.id)
 		court = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
 		reservations = Reservation.objects.filter(court=court, attended = False)
@@ -61,9 +60,19 @@ class markAsAttended(UpdateView):
 	template_name_suffix = '_update_form' # This is: modelName_update_form.html
 	success_url = '/reservations'
 
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    	    return super(markAsAttended, self).dispatch(*args, **kwargs)
+
 class cancelReservation(DeleteView):
 	model = Reservation
 	success_url = '/reservations'
+
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    	    return super(CreateCourt, self).dispatch(*args, **kwargs)
 
 def searchReservation(request):
 	#Class.objects.filter(date=datetime(2008,9,4)).query.as_sql()

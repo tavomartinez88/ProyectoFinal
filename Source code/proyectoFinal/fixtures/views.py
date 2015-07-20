@@ -54,8 +54,12 @@ class listFixtures(ListView):
 	model = Fixture
 	context_object_name = 'fixtures' # Nombre de la lista a recorrer desde listFixtures.html	
 	
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    	    return super(listFixtures, self).dispatch(*args, **kwargs)
+
 	def get_queryset(self):
-        #publisher = get_object_or_404(Publisher, name__iexact=self.args[0])
 	        return Fixture.objects.filter(tournament=Tournament.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
 
 class deleteFixture(DeleteView):

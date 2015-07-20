@@ -2,7 +2,7 @@
 <h1>ACTUALIZAR PERFIL</h1>
 <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
-    <a href="/update_telephone/1">Modificar telefono</a> <!-- Must redirect to the profile of the user who is logged in (														   When the login is implemented) -->
+    <a href="/update_telephone/{{userToUpdate.telephone_id}}">Modificar telefono</a> <!-- Must redirect to the profile of the user who is logged in (														   When the login is implemented) -->
     <br><br>
     <input type="submit" value="Confirmar" />
 </form>

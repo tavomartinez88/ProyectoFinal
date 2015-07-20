@@ -12,50 +12,54 @@ from proyectoFinal.complexes.models import Complex
 from proyectoFinal.users.models import UserProfile
 from proyectoFinal.teams.models import Team
 from forms import PlayerForm
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 
 def addplayerinfo(request, idplayer, idtournament):
-	if request.POST:
-		mform = PlayerForm(request.POST)
-		player_id = request.GET.get('idplayer')
-		
-		if mform.is_valid(): #if the information in the form its correct
-			#First, save the default User model provided by Django
-			player = PlayersInfo(
-                	goals=mform.cleaned_data['goals'],
-					yellowCards=mform.cleaned_data['yellowCards'], 
-					redCards=mform.cleaned_data['redCards'],
-					user=UserProfile.objects.get(user_id=idplayer),
-					tournament= Tournament.objects.get(id=idtournament),
-					
-                	)
-			usuario = UserProfile.objects.get(user_id=request.user)
-			
-			if usuario.userType == 'PR':
-				player.save()
-		return HttpResponseRedirect('/playersinfo')
+	if request.user.is_staff:
+		if request.POST:
+			mform = PlayerForm(request.POST)
+			player_id = request.GET.get('idplayer')		
+			if mform.is_valid(): #if the information in the form its correct
+				#First, save the default User model provided by Django
+				player = PlayersInfo(
+                		goals=mform.cleaned_data['goals'],
+						yellowCards=mform.cleaned_data['yellowCards'], 
+						redCards=mform.cleaned_data['redCards'],
+						user=UserProfile.objects.get(user_id=idplayer),
+						tournament= Tournament.objects.get(id=idtournament),					
+                		)
+				usuario = UserProfile.objects.get(user_id=request.user)
+				if usuario.userType == 'PR':
+					player.save()
+			return HttpResponseRedirect('/playersinfo')
+		else:
+			mform = PlayerForm()
+			player_id = UserProfile.objects.get(user_id=idplayer)
+		return render_to_response('playersinfo/addplayerinfo.html', {'mform': mform, 'player_id':player_id,'idtournament':idtournament}, RequestContext(request, {}))
 	else:
-		mform = PlayerForm()
-		player_id = UserProfile.objects.get(user_id=idplayer)
-	return render_to_response('playersinfo/addplayerinfo.html', {'mform': mform, 'player_id':player_id,'idtournament':idtournament}, RequestContext(request, {}))
+		raise Http404
 
 
 def updateplayerinfo(request, idplayer, idtournament):
-	jugador = UserProfile.objects.get(user_id=idplayer)
-	torneo = Tournament.objects.get(id=idtournament)
-	estadistica = PlayersInfo.objects.get(user_id=jugador.id, tournament_id=torneo.id)
-	if request.POST:
-		form = PlayerForm(request.POST)
-		if form.is_valid:
-			estadistica.goals=request.POST["goals"]
-			estadistica.yellowCards=request.POST["yellowCards"]
-			estadistica.redCards=request.POST["redCards"]
-			estadistica.save()
-		return HttpResponseRedirect('/playersinfo')
+	if request.user.is_staff:
+		jugador = UserProfile.objects.get(user_id=idplayer)
+		torneo = Tournament.objects.get(id=idtournament)
+		estadistica = PlayersInfo.objects.get(user_id=jugador.id, tournament_id=torneo.id)
+		if request.POST:
+			form = PlayerForm(request.POST)
+			if form.is_valid:
+				estadistica.goals=request.POST["goals"]
+				estadistica.yellowCards=request.POST["yellowCards"]
+				estadistica.redCards=request.POST["redCards"]
+				estadistica.save()
+			return HttpResponseRedirect('/playersinfo')
+		else:
+			form = PlayerForm(instance = estadistica)	
+		return render_to_response('playersinfo/updateplayerinfo.html', {'form':form,'idplayer':idplayer, 'idtournament':idtournament}, RequestContext(request, {}))
 	else:
-		form = PlayerForm(instance = estadistica)	
-	return render_to_response('playersinfo/updateplayerinfo.html', {'form':form,'idplayer':idplayer, 'idtournament':idtournament}, RequestContext(request, {}))
+		raise Http404
 
 
 
@@ -109,8 +113,11 @@ def playersFromTeam(request, idteam, idtournament):
 		raise Http404		 	
 
 def get_playerinfo_from_userid(request, userid):
-	infoJugador = PlayersInfo.objects.get(user_id=userid)
-	return render_to_response('playersinfo/playersinfo_update_form.html', {'infoJugador': infoJugador,})
+	if request.user.is_staff:
+		infoJugador = PlayersInfo.objects.get(user_id=userid)
+		return render_to_response('playersinfo/playersinfo_update_form.html', {'infoJugador': infoJugador,})
+	else:
+		raise Http404
 
 class listPlayersInfo(ListView):
 	template_name = 'playersinfo/listPlayersInfo.html'
