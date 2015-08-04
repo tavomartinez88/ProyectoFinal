@@ -10,7 +10,7 @@
 		{% for complex in complejo %} <!-- users -> Nombre de la lista especificado en views.py -->
 			<li>Complejo :{{complex.name}}</li>
 			{% for reservation in reservations %} <!-- users -> Nombre de la lista especificado en views.py -->
-				<li>Reservada :{{reservation.attended|yesno:"Si,No"}}</li>
+				<li>Asistió :{{reservation.attended|yesno:"Si,No"}}</li>
 				<li>Hora :{{reservation.hour}}</li>
 				<li>Minuto :{{reservation.minutes}}</li>
 				<li>Usuario :{{reservation.user.get_full_name}}</li>

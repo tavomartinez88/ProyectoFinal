@@ -1,7 +1,11 @@
 <title>Actualizar Torneo</title>
+{% if user.is_staff %}
 <h1>ACTUALIZAR ESTADO DE TORNEO</h1>
 <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <br><br>
     <input type="submit" value="Confirmar" />
 </form>
+{% else %}
+<h1>PERMISO DENEGADO</h1>
+{% endif %}

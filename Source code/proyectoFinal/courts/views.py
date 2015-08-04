@@ -12,8 +12,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
 
-
-
 class CreateCourt(CreateView):
 	model = Court
 	success_url = '/courts'
@@ -29,14 +27,18 @@ class CreateCourt(CreateView):
     	def dispatch(self, *args, **kwargs):
     	    return super(CreateCourt, self).dispatch(*args, **kwargs)
 
-
 class listCourt(ListView):
-	template_name = 'courts/listCourts.html'
-	model = Court
-	context_object_name = 'courts' # Nombre de la lista a recorrer desde listUsers.html
-        def get_queryset(self):
-          return Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))
-          
+  template_name = 'courts/listCourts.html'
+  model = Court
+  context_object_name = 'courts' # Nombre de la lista a recorrer desde listUsers.html
+
+  #restricted area for anonymous users
+  @method_decorator(login_required)
+  def dispatch(self, *args, **kwargs):
+    return super(listCourt, self).dispatch(*args, **kwargs)
+    
+  def get_queryset(self):
+    return Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))          
 
 class updateCourt(UpdateView):
   model = Court
@@ -69,22 +71,27 @@ class updateCourt(UpdateView):
 
 
 def updatecourts(request):
-  courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
-  return render_to_response('courts/updateAnyCourts.html',{'courts': courts})
+  if request.user.is_staff:
+    courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
+    return render_to_response('courts/updateAnyCourts.html',{'courts': courts})
+  else:
+    raise Http404
 
 def deletecourts(request):
-  courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
-  return render_to_response('courts/deleteAnyCourts.html',{'courts': courts})  
+  if request.user.is_staff:
+    courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user.id))
+    return render_to_response('courts/deleteAnyCourts.html',{'courts': courts})  
+  else:
+    raise Http404
 
 
 def search_court(request):
   query = request.GET.get('q', '')
   if query:
-	qset = (Q(complejo__name__icontains=query))
-	results = Court.objects.filter(qset).distinct()
-
+    qset = (Q(complex__name__icontains=query))
+    results = Court.objects.filter(qset).distinct()
   else:
-	results = []
+    results = []
   return render_to_response("courts/searchCourt.html",{"results": results,"query": query})
 
 
@@ -112,6 +119,3 @@ class deleteCourt(DeleteView):
     if not usuario.user == self.request.user:
         raise Http404
     return cancha    
-
-
-# Create your views here.

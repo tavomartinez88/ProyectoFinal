@@ -55,38 +55,38 @@ class deleteComplex(DeleteView):
   
 
 def register(request):
-	if request.POST:
-		cform = ComplexForm(request.POST) #create a UserForm
-		
-		#tform = TelephoneForm(request.POST)
-		if cform.is_valid() : #if the information in the form its correct
-		  
-		  
-		  
-		  add=cform.save()
-		  add2=Complex.objects.get(id=add.id)
-		  #aqui se deberia reemplazar el 1 por el numero de id del usuario logueado
-		  ident = UserProfile.objects.get(user_id = request.user.id)
-		  add2.user_id = ident.user_id
-		  add2.save()
-		  return HttpResponseRedirect('/complexes')
-
-	else:
-		cform = ComplexForm()
-		#tform = TelephoneForm()
-	args = {}
-	args.update(csrf(request))
-	args['cform'] = cform
-	return render_to_response('complexes/register.html', args)
+  if request.user.is_staff:
+    if request.POST:
+      cform = ComplexForm(request.POST) #create a ComplexForm
+      if cform.is_valid() : #if the information in the form its correct
+        add=cform.save()
+        add2=Complex.objects.get(id=add.id)
+        ident = UserProfile.objects.get(user_id = request.user.id)
+        add2.user_id = ident.user_id
+        add2.save()
+        return HttpResponseRedirect('/complexes')
+    else:
+      cform = ComplexForm()
+      args = {}
+      args.update(csrf(request))
+      args['cform'] = cform
+      return render_to_response('complexes/register.html', args)
+  else:
+    raise Http404
 
 def updatecomplexes(request):
-	complexes = Complex.objects.filter(user = request.user)
-	return render_to_response('complexes/updateAnyComplexes.html',{'complexes': complexes})
+  if request.user.is_staff:
+    complexes = Complex.objects.filter(user = request.user)
+    return render_to_response('complexes/updateAnyComplexes.html',{'complexes': complexes})
+  else:
+    raise Http404
 
 def deletecomplexes(request):
-	complexes = Complex.objects.filter(user = request.user.id)
-	return render_to_response('complexes/deleteAnyComplexes.html',{'complexes': complexes})	
-
+  if request.user.is_staff:
+    complexes = Complex.objects.filter(user = request.user.id)
+    return render_to_response('complexes/deleteAnyComplexes.html',{'complexes': complexes})	
+  else:
+    raise Http404
 
 class updateComplex(UpdateView):
   model = Complex

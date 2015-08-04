@@ -24,6 +24,7 @@
         <p> Goles: {{ playerinfo.goals|escape }} </p>
         <p> Tarjetas Amarillas: {{ playerinfo.yellowCards|escape }} </p>
         <p> Tarjetas Rojas: {{ playerinfo.redCards|escape }} </p>
+        <p> Torneo en el cual participa: {{playerinfo.tournament}}
       {% endfor %}
       </ul>
     {% else %}

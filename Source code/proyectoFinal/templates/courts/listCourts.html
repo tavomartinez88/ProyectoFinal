@@ -12,7 +12,7 @@
 			<li><b> N° de cancha: </b> {{court.id}} </li>
 			<li><b> Luz artificial: </b> {{court.artificial_light|yesno:"Si,No"}} </li>
 			<li><b> Tipo de piso: </b> {{court.get_lawnType_display}} </li> 
-			<li><b> Tipo de cancha: </b> {{court.get_soccerType_display|yesno:"Si,No"}} </li> 
+			<li><b> Tipo de cancha: </b> {{court.get_soccerType_display}} </li> 
 			<li><b> Complejo: </b> {{court.complex.name}} </li>
 			<a href="/editCourt/{{court.id}}"><button>Editar</button></a>
 			<br><br>

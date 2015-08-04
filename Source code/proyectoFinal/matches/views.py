@@ -17,30 +17,33 @@ from django.http import Http404
 
 
 def addmatch(request,idfixture):
-	if request.POST:
-		mform = MatchForm(request.POST)
-		fixture_id = request.GET.get('idfixture')
-		if mform.is_valid(): #if the information in the form its correct
-			#First, save the default User model provided by Django
-			match = Match(
-                	day=mform.cleaned_data['day'],
-					hour=mform.cleaned_data['hour'], 
-					minutes=mform.cleaned_data['minutes'],
-					teamlocal=mform.cleaned_data['teamlocal'],
-					teamVisitant=mform.cleaned_data['teamVisitant'],
-					fixture = Fixture.objects.get(id=idfixture)
-                	)
-			usuario = UserProfile.objects.get(user_id=request.user)
-			f = Fixture.objects.get(id=idfixture)
-			if mform.cleaned_data['day']<f.date:
-				raise Http404
-			if usuario.userType == 'PR':
-				match.save()
-		return HttpResponseRedirect('/fixtures')
+	if request.user.is_staff:
+		if request.POST:
+			mform = MatchForm(request.POST)
+			fixture_id = request.GET.get('idfixture')
+			if mform.is_valid(): #if the information in the form its correct
+				#First, save the default User model provided by Django
+				match = Match(
+                		day=mform.cleaned_data['day'],
+						hour=mform.cleaned_data['hour'], 
+						minutes=mform.cleaned_data['minutes'],
+						teamlocal=mform.cleaned_data['teamlocal'],
+						teamVisitant=mform.cleaned_data['teamVisitant'],
+						fixture = Fixture.objects.get(id=idfixture)
+                		)
+				usuario = UserProfile.objects.get(user_id=request.user)
+				f = Fixture.objects.get(id=idfixture)
+				if mform.cleaned_data['day']<f.date:
+					raise Http404
+				if usuario.userType == 'PR':
+					match.save()
+			return HttpResponseRedirect('/fixtures')
+		else:
+			mform = MatchForm()
+			fixture_id = Fixture.objects.get(id=idfixture)
+		return render_to_response('matches/addmatch.html', {'mform': mform, 'fixture_id':fixture_id}, RequestContext(request, {}))
 	else:
-		mform = MatchForm()
-		fixture_id = Fixture.objects.get(id=idfixture)
-	return render_to_response('matches/addmatch.html', {'mform': mform, 'fixture_id':fixture_id}, RequestContext(request, {}))
+		raise Http404
 
 
 

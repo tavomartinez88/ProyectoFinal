@@ -16,30 +16,33 @@ from django.core.urlresolvers import reverse
 
 
 def register(request):
-	if request.POST:
-		form = UserForm(request.POST) #create a UserForm
-		tform = TelephoneForm(request.POST)
-		if form.is_valid() and tform.is_valid(): #if the information in the form its correct
-			#First, save the default User model provided by Django
-			user = User.objects.create_user(
-                	username=form.cleaned_data['username'],
-					email=form.cleaned_data['email'], 
-					password=form.cleaned_data['password'],
-					last_name=form.cleaned_data['lastname'],
-					first_name=form.cleaned_data['firstname']
-                	)
-			userProfile = form.save(commit=False) #then prepare the user model, but dont commit it yet to the database
-			userProfile.user_id = user.id
-			userProfile.telephone = tform.save() #add the telephone id to the user model, and save the telephone model
-			userProfile.save() #save the user model
-			if userProfile.userType == 'PR':
-				user.is_active = False
-        		user.save()
-		return HttpResponseRedirect('/users')
+	if not request.user.is_active:
+		if request.POST:
+			form = UserForm(request.POST) #create a UserForm
+			tform = TelephoneForm(request.POST)
+			if form.is_valid() and tform.is_valid(): #if the information in the form its correct
+				#First, save the default User model provided by Django
+				user = User.objects.create_user(
+                		username=form.cleaned_data['username'],
+						email=form.cleaned_data['email'], 
+						password=form.cleaned_data['password'],
+						last_name=form.cleaned_data['lastname'],
+						first_name=form.cleaned_data['firstname']
+                		)
+				userProfile = form.save(commit=False) #then prepare the user model, but dont commit it yet to the database
+				userProfile.user_id = user.id
+				userProfile.telephone = tform.save() #add the telephone id to the user model, and save the telephone model
+				userProfile.save() #save the user model
+				if userProfile.userType == 'PR':
+					user.is_active = False
+        			user.save()
+			return HttpResponseRedirect('/users')
+		else:
+			form = UserForm()
+			tform = TelephoneForm()
+		return render_to_response('users/register.html', {'form': form, 'tform': tform}, RequestContext(request, {}))
 	else:
-		form = UserForm()
-		tform = TelephoneForm()
-	return render_to_response('users/register.html', {'form': form, 'tform': tform}, RequestContext(request, {}))
+		raise Http404
 
 class listUser(ListView):
 	template_name = 'users/listUsers.html'
@@ -51,6 +54,8 @@ class userUpdate(UpdateView):
 	fields = ['email', 'city', 'password', 'userType']
 	template_name_suffix = '_update_form'
 	success_url = '/users' #redirect when the edit form is filled
+	context_object_name = 'userToUpdate'
+
 	def get_form_kwargs(self):
 			kwargs = super(userUpdate, self).get_form_kwargs()
 			return kwargs		
@@ -59,13 +64,11 @@ class userUpdate(UpdateView):
 	def dispatch(self, *args, **kwargs):
 		return super(userUpdate, self).dispatch(*args, **kwargs)
 
-	
 	def get_object(self,queryset=None):
 	   	usuario = super(userUpdate, self).get_object()
 	   	if not usuario.user == self.request.user:
 	   		raise Http404
 	   	return usuario
-
 
 class telephoneUpdate(UpdateView):
 	model = Telephone

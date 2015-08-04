@@ -15,6 +15,11 @@ class TeamCreate(CreateView):
 	fields = ['name', 'players']
 	success_url = '/teams'
 
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    	    return super(TeamCreate, self).dispatch(*args, **kwargs)
+	
 	#set the user that's logged in as the captain
 	def form_valid(self, form):
     		form.instance.captain = self.request.user
@@ -33,8 +38,11 @@ class listTeams(ListView):
 		return render_to_response('/teams.html', context_dic, context)
 
 def updateteams(request):
-	teams = Team.objects.filter(captain = request.user.id)
-	return render_to_response('teams/updateAnyTeams.html',{'teams': teams})
+	if not (request.user.is_staff or request.user.is_anonymous()):
+		teams = Team.objects.filter(captain = request.user.id)
+		return render_to_response('teams/updateAnyTeams.html',{'teams': teams})
+	else:
+		raise Http404
 
 class updateTeam(UpdateView):
 	model = Team
@@ -58,8 +66,11 @@ class updateTeam(UpdateView):
 
 
 def deleteteams(request):
-	teams = Team.objects.filter(captain = request.user.id)
-	return render_to_response('teams/deleteAnyTeams.html',{'teams': teams})
+	if not (request.user.is_staff or request.user.is_anonymous()):
+		teams = Team.objects.filter(captain = request.user.id)
+		return render_to_response('teams/deleteAnyTeams.html',{'teams': teams})
+	else:
+		raise Http404
 
 class deleteTeam(DeleteView):
 	model = Team
