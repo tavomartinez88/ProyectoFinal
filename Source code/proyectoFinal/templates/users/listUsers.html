@@ -17,7 +17,7 @@
 			<li><b> Ciudad: </b> {{user.city.name}} </li>
 			<li><b> Telefono: </b> {{user.telephone.number}} </li>
 			<li><b> Tipo de Usuario: </b> {{user.get_userType_display}} </li> <!-- Para mostrar el nombre completo, no la abreviacion de la base de datos -->
-			<button><a href="/update_user/1">Editar</a></button>
+			<a href="/update_user/{{user.id}}"><button>Editar</button></a>
 			<br><br>
 		{% endfor %}
 	</ul>

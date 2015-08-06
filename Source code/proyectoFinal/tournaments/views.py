@@ -7,9 +7,11 @@ from django.template import RequestContext
 from models import Tournament
 from proyectoFinal.fixtures.models import Fixture
 from proyectoFinal.users.models import UserProfile
+from proyectoFinal.complexes.models import Complex
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from forms import TournamentForm
+from django.http import Http404
 
 class TournamentCreate(CreateView):
 	model = Tournament
@@ -48,20 +50,37 @@ class markAsFinished(UpdateView):
     	    return super(markAsFinished, self).dispatch(*args, **kwargs)	
 
 
+@login_required
+def deleteTournament(request):
+	usuario = UserProfile.objects.get(user=request.user)
+	if usuario.userType=='CM':
+		raise Http404
+	else:
+		tournaments = Tournament.objects.filter(complex=Complex.objects.filter(user=request.user))
+		return render_to_response('tournaments/deleteAnyTournaments.html',{"tournaments": tournaments})
+
+	
+
 
 class cancelTournament(DeleteView):
 	model = Tournament
 	success_url = '/tournaments'
 
 	def get_form_kwargs(self):
-    		kwargs = super(cancelTournament, self).get_form_kwargs()
-    		kwargs.update({'user': self.request.user})
-    		return kwargs
+		usuario = UserProfile.objects.get(user=request.user)
+		if usuario.userType=='CM':
+			kwargs = super(cancelTournament, self).get_form_kwargs()
+   			kwargs.update({'user': self.request.user})
+   			return kwargs
+   		raise Http404
+
+    	
 
 	#restricted area for anonymous users
 	@method_decorator(login_required)
     	def dispatch(self, *args, **kwargs):
     	    return super(cancelTournament, self).dispatch(*args, **kwargs)	
+
 
 def searchTournament(request):
   query = request.GET.get('q', '')

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset"UTF-8">
+	<title>Canchas</title>
+</head>
+<body>	
+	<h1>Torneos Para Eliminar</h1>
+	{% if tournaments %}
+	<ul>
+		{% for tournament in tournaments %} <!-- users -> Nombre de la lista especificado en views.py -->
+			<li>Complejo:{{tournament.complex}}</li>
+			<li>Nombre :{{tournament.name}}</li>
+			<br>
+			<a href="/canceltournament/{{tournament.id}}/"><button>Eliminar Torneo</button></a>
+			<hr>
+		{% endfor %}	
+	</ul>
+	{%else%}
+		<p>No tiene ningun torneo para eliminar</p>
+	{%endif%}
+		
+	
+</body>
+</html>
+
+

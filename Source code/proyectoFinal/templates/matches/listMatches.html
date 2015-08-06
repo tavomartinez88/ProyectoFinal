@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Partidos Registrados</h1>
-
+	{%if matches%}
 	<ul>
 		{% for match in matches %} <!--matches -> Nombre de la lista especificado en views.py -->
 			<li><b> Fecha del Partido: </b> {{match.day}} </li>
@@ -19,6 +19,8 @@
 		{% endfor %}
 	</ul>
 	<br><br><br><br>
-	<ul>
+	{%else%}
+		<p>No existen partidos</p>
+	{%endif%}
 
 </body>

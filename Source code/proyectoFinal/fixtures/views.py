@@ -36,7 +36,8 @@ class FixtureCreate(CreateView):
     		kwargs = super(FixtureCreate, self).get_form_kwargs()
     		kwargs.update({'user': self.request.user})
     		return kwargs    		
-	
+
+@login_required	
 def listMatchForFixture(request,idfixture):
 		if request.user.is_staff:
 			userprofile = UserProfile.objects.get(user_id=request.user)
@@ -60,7 +61,12 @@ class listFixtures(ListView):
     	    return super(listFixtures, self).dispatch(*args, **kwargs)
 
 	def get_queryset(self):
-	        return Fixture.objects.filter(tournament=Tournament.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
+			usuario = UserProfile.objects.get(user=self.request.user)
+			if usuario.userType=='PR':
+				return Fixture.objects.filter(tournament=Tournament.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
+			else:
+				return Fixture.objects.filter(tournament=Tournament.objects.filter(inProgress=True))
+			
 
 class deleteFixture(DeleteView):
 	model = Fixture

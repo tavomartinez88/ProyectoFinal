@@ -16,8 +16,10 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 
+@login_required
 def addplayerinfo(request, idplayer, idtournament):
-	if request.user.is_staff:
+	usuario = UserProfile.objects.get(user_id=request.user)
+	if usuario.userType == 'PR':
 		if request.POST:
 			mform = PlayerForm(request.POST)
 			player_id = request.GET.get('idplayer')		
@@ -30,7 +32,7 @@ def addplayerinfo(request, idplayer, idtournament):
 						user=UserProfile.objects.get(user_id=idplayer),
 						tournament= Tournament.objects.get(id=idtournament),					
                 		)
-				usuario = UserProfile.objects.get(user_id=request.user)
+				
 				if usuario.userType == 'PR':
 					player.save()
 			return HttpResponseRedirect('/playersinfo')
@@ -41,9 +43,10 @@ def addplayerinfo(request, idplayer, idtournament):
 	else:
 		raise Http404
 
-
+@login_required
 def updateplayerinfo(request, idplayer, idtournament):
-	if request.user.is_staff:
+	usuario = UserProfile.objects.get(user_id=request.user)
+	if usuario.userType=='PR':
 		jugador = UserProfile.objects.get(user_id=idplayer)
 		torneo = Tournament.objects.get(id=idtournament)
 		estadistica = PlayersInfo.objects.get(user_id=jugador.id, tournament_id=torneo.id)
@@ -112,6 +115,7 @@ def playersFromTeam(request, idteam, idtournament):
 	else :
 		raise Http404		 	
 
+@login_required
 def get_playerinfo_from_userid(request, userid):
 	if request.user.is_staff:
 		infoJugador = PlayersInfo.objects.get(user_id=userid)
@@ -123,6 +127,14 @@ class listPlayersInfo(ListView):
 	template_name = 'playersinfo/listPlayersInfo.html'
 	model = PlayersInfo
 	context_object_name = 'playersinfo' # Nombre de la lista a recorrer desde listPlayersInfo.html
+	def get_queryset(self):
+		usuario = UserProfile.objects.get(user_id=self.request.user)
+		if usuario.userType=='PR':
+			return PlayersInfo.objects.filter(tournament=Tournament.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
+		else:
+			raise Http404
+		
+		
 
 class updatePlayerInfo(UpdateView):
 	model = PlayersInfo

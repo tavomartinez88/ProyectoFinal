@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Torneos Registrados</h1>
-
+	{% if tournaments%}
 	<ul>
 		{% for tournament in tournaments %} <!-- tournaments -> Nombre de la lista especificado en views.py -->
 			<li><b> Nombre del torneo: </b> {{tournament.name}} </li>
@@ -21,6 +21,8 @@
 		{% endfor %}
 	</ul>
 	<br><br><br><br>
-	<ul>
+	{%else%}
+		<p>No posee aun ningun torneo</p>
+	{%endif%}
 
 </body>

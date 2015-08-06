@@ -15,9 +15,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
 
-
+@login_required
 def addmatch(request,idfixture):
-	if request.user.is_staff:
+	usuario = UserProfile.objects.get(user=request.user)
+	if usuario.userType=='PR':
 		if request.POST:
 			mform = MatchForm(request.POST)
 			fixture_id = request.GET.get('idfixture')
@@ -33,14 +34,20 @@ def addmatch(request,idfixture):
                 		)
 				usuario = UserProfile.objects.get(user_id=request.user)
 				f = Fixture.objects.get(id=idfixture)
-				if mform.cleaned_data['day']<f.date:
+				if mform.cleaned_data['day']<f.date :
 					raise Http404
 				if usuario.userType == 'PR':
 					match.save()
 			return HttpResponseRedirect('/fixtures')
 		else:
-			mform = MatchForm()
-			fixture_id = Fixture.objects.get(id=idfixture)
+			mform = MatchForm()		
+			#la sig variable y el if verifica si el fixture es propiedad del usuario logueado
+			verify_fixture = Fixture.objects.filter(id=idfixture ,tournament=Tournament.objects.filter(complex=Complex.objects.filter(user=request.user))).count()	
+			if verify_fixture == 0:
+				raise Http404
+			else:
+				fixture_id = Fixture.objects.get(id=idfixture)
+			
 		return render_to_response('matches/addmatch.html', {'mform': mform, 'fixture_id':fixture_id}, RequestContext(request, {}))
 	else:
 		raise Http404
@@ -51,6 +58,15 @@ class listMatches(ListView):
 	template_name = 'matches/listMatches.html'
 	model = Match
 	context_object_name = 'matches' # Nombre de la lista a recorrer desde listMatches.html	
+
+	def get_queryset(self):
+		usuario = UserProfile.objects.get(user=self.request.user)
+		if usuario.userType=='PR':
+			return Match.objects.filter(fixture=Fixture.objects.filter(tournament=Tournament.objects.filter(complex=Complex.objects.filter(user=self.request.user))))
+		else:
+			return Match.objects.all()
+
+		
 
 
 class deleteMatch(DeleteView):

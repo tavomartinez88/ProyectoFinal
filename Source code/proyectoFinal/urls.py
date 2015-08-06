@@ -5,7 +5,7 @@ from teams.views import TeamCreate, listTeams, updateTeam, deleteTeam
 from matches.views import listMatches , deleteMatch , addResult
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
 from reservations.views import ReservationCreate, listReservations, markAsAttended, cancelReservation, searchReservation
-from courts.views import listCourt, updateCourt, deleteCourt, CreateCourt
+from courts.views import updateCourt, deleteCourt, CreateCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
 from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
 from playersinfo.views import listPlayersInfo, updatePlayerInfo, searchPlayerInfo
@@ -38,7 +38,8 @@ urlpatterns += patterns('proyectoFinal.complexes.views',
 urlpatterns += patterns('proyectoFinal.courts.views',
 						url(r'^addCourt/?$', CreateCourt.as_view()),
 						url(r'^searchcourt/?$', 'search_court'),
-						url(r'^courts/?$', listCourt.as_view()),
+						url(r'^courts_for_owners/?$', 'listCourtForOwner'),
+						url(r'^courts_for_commons/(?P<idcomplex>\d+)$', 'listCourtForCommon'),
 						url(r'^editCourt/(?P<pk>\d+)/$', updateCourt.as_view()),
 						url(r'^updatecourts/?$', 'updatecourts'),
 						url(r'^deletecourts/?$', 'deletecourts'),
@@ -75,7 +76,8 @@ urlpatterns += patterns('proyectoFinal.tournaments.views',
 						url(r'^tournaments/?$', listTournaments.as_view()),
 						url(r'^updatetournament/(?P<pk>\d+)/$', markAsFinished.as_view()),
 						url(r'^canceltournament/(?P<pk>\d+)/$', cancelTournament.as_view()),
-						url(r'^searchtournament/?$', 'searchTournament'),)
+						url(r'^searchtournament/?$', 'searchTournament'),
+						url(r'^deletetournaments/?$', 'deleteTournament'),)
 
 
 

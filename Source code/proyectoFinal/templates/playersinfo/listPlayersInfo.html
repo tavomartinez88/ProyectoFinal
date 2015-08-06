@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Estadisticas de jugador</h1>
-
+	{% if playersinfo %}
 	<ul>
 		{% for playerinfo in playersinfo %} <!-- playersinfo -> Nombre de la lista especificado en views.py -->
 			<li><b> Nombre: </b> {{playerinfo.user}} </li>
@@ -19,5 +19,7 @@
 	</ul>
 	<br><br><br><br>
 	<ul>
-
+	{% else %}
+		<p>No se ha creado ninguna estadistica de ningun jugador en los torneos creados</p>
+	{% endif %}
 </body>

@@ -27,18 +27,28 @@ class CreateCourt(CreateView):
     	def dispatch(self, *args, **kwargs):
     	    return super(CreateCourt, self).dispatch(*args, **kwargs)
 
-class listCourt(ListView):
-  template_name = 'courts/listCourts.html'
-  model = Court
-  context_object_name = 'courts' # Nombre de la lista a recorrer desde listUsers.html
 
-  #restricted area for anonymous users
-  @method_decorator(login_required)
-  def dispatch(self, *args, **kwargs):
-    return super(listCourt, self).dispatch(*args, **kwargs)
-    
-  def get_queryset(self):
-    return Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))          
+@login_required
+def listCourtForOwner(request):
+  usuario = UserProfile.objects.get(user=request.user)
+  courts = []
+  if usuario.userType=='PR':
+    courts = Court.objects.filter(complex=Complex.objects.filter(user=request.user))
+    return render_to_response("courts/listCourts.html",{"courts": courts})
+  else:
+    raise Http404
+  
+
+@login_required
+def listCourtForCommon(request,idcomplex):
+  usuario = UserProfile.objects.get(user=request.user)
+  complex_id = request.GET.get('idcomplex') 
+  if usuario.userType=='CM':
+    courts = Court.objects.filter(complex_id=idcomplex)
+    return render_to_response("courts/listCourts.html",{"courts": courts})
+  else:
+    raise Http404
+  
 
 class updateCourt(UpdateView):
   model = Court
