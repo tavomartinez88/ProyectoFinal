@@ -12,8 +12,19 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
+from forms import ReservationForm
 
-class ReservationCreate(CreateView):
+
+@login_required
+def reservationCreate(request):
+	usuario = UserProfile.objects.get(user=request.user)
+	if usuario.userType=='CM':
+		return HttpResponseRedirect('/addreservationCommonUser')
+	else:
+		return HttpResponseRedirect('/addreservationOwnerUser')
+	
+
+class CreateReservationAsCommonUser(CreateView):
 	model = Reservation
 	fields = ['date', 'hour', 'minutes', 'court']
 	success_url = '/reservations'
@@ -21,12 +32,47 @@ class ReservationCreate(CreateView):
 	#restricted area for anonymous users
 	@method_decorator(login_required)
     	def dispatch(self, *args, **kwargs):
-    	    return super(ReservationCreate, self).dispatch(*args, **kwargs)
+    		usuario = UserProfile.objects.get(user=self.request.user)
+    		if usuario.userType=='CM':
+    			return super(CreateReservationAsCommonUser, self).dispatch(*args, **kwargs)
+    		else:
+    			raise Http404
+    		
 
 	#set the user that's logged in as the user that make the reservation
 	def form_valid(self, form):
-    		form.instance.user = self.request.user
-    		return super(ReservationCreate, self).form_valid(form)
+			user_logued = UserProfile.objects.get(user=self.request.user)
+			form.instance.user = user_logued
+			reservas = Reservation.objects.filter(date=form.instance.date,hour=form.instance.hour,minutes=form.instance.minutes,court=form.instance.court).count()
+			print reservas
+			if reservas == 0:
+				return super(CreateReservationAsCommonUser, self).form_valid(form)
+			else:
+				raise Http404
+
+
+class CreateReservationAsOwnerUser(CreateView):
+	model = Reservation
+	fields = ['date', 'hour', 'minutes', 'user', 'court']
+	success_url = '/reservations'
+	form_class = ReservationForm
+	
+	#restricted area for anonymous users
+	@method_decorator(login_required)
+    	def dispatch(self, *args, **kwargs):
+    		if usuario.userType=='PR':
+    			return super(CreateReservationAsOwnerUser, self).dispatch(*args, **kwargs)
+    		else:
+    			raise Http404
+
+	#set the user that's logged in as the user that make the reservation
+	def form_valid(self, form):
+			reservas = Reservation.objects.filter(date=form.instance.date,hour=form.instance.hour,minutes=form.instance.minutes,court=form.instance.court).count()
+			print reservas
+			if reservas == 0:
+				return super(CreateReservationAsOwnerUser, self).form_valid(form)
+			else:
+				raise Http404
 	
 class listReservations(ListView):
 	template_name = 'reservations/listReservations.html'
@@ -40,7 +86,7 @@ class listReservations(ListView):
 		else:
 			usuario = UserProfile.objects.get(user=self.request.user)
 			if usuario.userType=='CM':
-				return Reservation.objects.filter(user_id=self.request.user)
+				return Reservation.objects.filter(user_id=UserProfile.objects.get(user=self.request.user))
 			else:
 				return Reservation.objects.filter(court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
 			

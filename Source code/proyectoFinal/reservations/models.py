@@ -25,5 +25,5 @@ class Reservation(models.Model):
 	date = models.DateField(verbose_name='Fecha', help_text='DD/MM/AAAA')
 	hour = models.IntegerField(choices= hour_choices, verbose_name='Hora')
 	minutes = models.IntegerField(choices= minutes_choices,verbose_name='Minutos')
-	user = models.ForeignKey(User, verbose_name='Usuario')
+	user = models.ForeignKey(UserProfile, verbose_name='Usuario')
 	court = models.ForeignKey(Court, verbose_name='Cancha')

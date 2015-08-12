@@ -6,6 +6,7 @@
 </head>
 <body>	
 	<h1>Canchas Para Actualizar</h1>
+	{%if courts%}
 	<ul>
 		{% for court in courts %} <!-- users -> Nombre de la lista especificado en views.py -->
 			<li>Complejo :{{court.complex.name}}</li>
@@ -17,6 +18,9 @@
 			<hr>
 		{% endfor %}
 	</ul>
+	{%else%}
+		<p>No se han encontrado canchas</p>
+	{% endif %}
 		
 	
 </body>

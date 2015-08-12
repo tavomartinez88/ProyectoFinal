@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
 
+
 class TeamCreate(CreateView):
 	model = Team
 	fields = ['name', 'players']
@@ -18,12 +19,18 @@ class TeamCreate(CreateView):
 	#restricted area for anonymous users
 	@method_decorator(login_required)
     	def dispatch(self, *args, **kwargs):
-    	    return super(TeamCreate, self).dispatch(*args, **kwargs)
+    		usuario = UserProfile.objects.get(user = self.request.user)   		
+    		if usuario.userType=='CM' :
+    			return super(TeamCreate, self).dispatch(*args, **kwargs)
+    		else:
+    			raise Http404
+    		
 	
 	#set the user that's logged in as the captain
 	def form_valid(self, form):
-    		form.instance.captain = self.request.user
-    		return super(TeamCreate, self).form_valid(form)
+   		form.instance.captain = self.request.user
+   		return super(TeamCreate, self).form_valid(form)
+
 
 class listTeams(ListView):
 	template_name = 'teams/listTeams.html'
@@ -38,7 +45,8 @@ class listTeams(ListView):
 		return render_to_response('/teams.html', context_dic, context)
 
 def updateteams(request):
-	if not (request.user.is_staff or request.user.is_anonymous()):
+	usuario = UserProfile.objects.get(user=request.user)
+	if not (usuario.userType=='PR' or request.user.is_anonymous()):
 		teams = Team.objects.filter(captain = request.user.id)
 		return render_to_response('teams/updateAnyTeams.html',{'teams': teams})
 	else:
@@ -55,7 +63,12 @@ class updateTeam(UpdateView):
 
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
-		return super(updateTeam,self).dispatch(*args, **kwargs)
+		usuario = UserProfile.objects.get(user=self.request.user)
+		if usuario.userType=='CM':
+			return super(updateTeam,self).dispatch(*args, **kwargs)
+		else:
+			raise Http404
+		
 
 	def get_object(self, queryset=None):
 		team = super(updateTeam,self).get_object()
@@ -81,7 +94,12 @@ class deleteTeam(DeleteView):
 
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
-		return super(deleteTeam,self).dispatch(*args, **kwargs)
+		usuario = UserProfile.objects.get(user=self.request.user)
+		if usuario.userType=='CM':
+			return super(deleteTeam,self).dispatch(*args, **kwargs)
+		else:
+			raise Http404
+		
 
 	def get_object(self, queryset=None):
 		team = super(deleteTeam,self).get_object()

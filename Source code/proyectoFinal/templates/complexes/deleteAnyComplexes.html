@@ -6,13 +6,16 @@
 </head>
 <body>	
 	<h1>Complejos Para Eliminar</h1>
-
+	{%if complexes %}
 	<ul>
 		{% for complex in complexes %} <!-- users -> Nombre de la lista especificado en views.py -->
 			<li>{{complex.name}}   <a href="/deletecomplex/{{complex.id}}/"><button>Eliminar</button></a></li>
 			<br><br>
 		{% endfor %}
 	</ul>
+	{%else%}
+		<p>No se encontraron complejos</p>
+	{%endif%}
 
 </body>
 </html>

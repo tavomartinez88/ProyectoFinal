@@ -5,6 +5,7 @@
 	<title>Jugador</title>
 </head>
 <body>	
+	{%if get_playerinfo_from_userid%}
 	<h1>Jugador seleccionado: {{get_playerinfo_from_userid.user_id}}</h1>
 
 	<ul>
@@ -15,5 +16,8 @@
 	</ul>
 	<br><br><br><br>
 	<ul>
+	{%else%}
+		<p>No se encontro el jugador</p>
+	{%endif%}
 
 </body>

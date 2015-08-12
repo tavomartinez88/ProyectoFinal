@@ -6,18 +6,23 @@
 </head>
 <body>	
 	<h1>Partidos en juego del fixture</h1>
-
-	<ul>
-		<li><b> Nombre del Fixture: </b> {{fix.name}} </li>
-		<br/>
-		{% for match in partidos %}
-			<li>Local : <b> {{match.teamlocal.name}}</b> vs Visitante : <b> {{match.teamVisitant.name}}</b> 
-			<a href="/addscore/{{match.id}}"><button>Agregar resultado</button></a></li>
-			
-			
-		{% endfor %}
-	</ul>
-	<br><br><br><br>
-	<ul>
+	{%if fix%}
+		<ul>
+			<li><b> Nombre del Fixture: </b> {{fix.name}} </li>
+			<br/>
+			{%if partidos%}
+				{% for match in partidos %}
+				  <li>Local : <b> {{match.teamlocal.name}}</b> vs Visitante : <b> {{match.teamVisitant.name}}</b>
+				  <a href="/addscore/{{match.id}}"><button>Agregar resultado</button></a></li>
+				{% endfor %}
+			{%else%}
+				<p>{{fix.name}} no tiene partidos aun</p>
+			{%endif%}
+		</ul>
+		<br><br><br><br>
+		<ul>
+	{%else%}
+		<p>No hay Fixtures ni partidos</p>
+	{%endif%}
 
 </body>

@@ -6,15 +6,18 @@
 </head>
 <body>	
 	<h1>Elija el equipo al cual pertenece el jugador a modificar</h1>
-
-	<ul>
-		<br/>
-		{% for team in equipos %}
-			<li>Nombre del equipo: <b> {{team.name}}</b>
-			<a href="/playersFromTeam/{{team.id}}/{{idtournament}}"><button>Editar informacion</button></a></li>			
-		{% endfor %}
-	</ul>
-	<br><br><br><br>
-	<ul>
+	{%if equipos%}
+		<ul>
+			<br/>
+			{% for team in equipos %}
+				<li>Nombre del equipo: <b> {{team.name}}</b>
+				<a href="/playersFromTeam/{{team.id}}/{{idtournament}}"><button>Editar informacion</button></a></li>			
+			{% endfor %}
+		</ul>
+		<br><br><br><br>
+		<ul>
+	{%else%}
+		<p>No hay equipos</p>
+	{%endif%}
 
 </body>

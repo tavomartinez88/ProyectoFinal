@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Elija el torneo al cual pertenece el jugador cuyas estadisticas desea modificar</h1>
-
+	{%if torneos%}
 	<ul>
 		<br/>
 		{% for tournament in torneos %}
@@ -16,5 +16,8 @@
 	</ul>
 	<br><br><br><br>
 	<ul>
+	{%else%}
+		<p>No se encontraron torneos</p>
+	{%endif%}
 
 </body>

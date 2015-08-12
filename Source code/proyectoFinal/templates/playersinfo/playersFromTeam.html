@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Elija el jugador a modificar</h1>
-
+	{%if jugadores%}
 	<ul>
 		<br/>
 		{% for player in jugadores %}
@@ -15,5 +15,8 @@
 	</ul>
 	<br><br><br><br>
 	<ul>
+	{%else%}
+		<p>No se encontraron jugadores</p>
+	{%endif%}
 
 </body>

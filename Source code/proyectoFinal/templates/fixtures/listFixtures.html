@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Fixtures Registrados</h1>
-
+	{%if fixtures%}
 	<ul>
 		{% for fixture in fixtures %} <!--matches -> Nombre de la lista especificado en views.py -->
 			<li><b> Fecha de comienzo: </b> {{fixture.date}} </li>
@@ -21,5 +21,7 @@
 	</ul>
 	<br><br><br><br>
 	<ul>
-
+	{%else%}
+		<p>No se han encontrado Fixtures</p>
+	{%endif%}
 </body>

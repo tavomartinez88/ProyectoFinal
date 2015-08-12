@@ -4,7 +4,7 @@ from complexes.views import listComplex,updateComplex, deleteComplex
 from teams.views import TeamCreate, listTeams, updateTeam, deleteTeam
 from matches.views import listMatches , deleteMatch , addResult
 from users.views import listUser,userUpdate, telephoneUpdate, deleteUser
-from reservations.views import ReservationCreate, listReservations, markAsAttended, cancelReservation, searchReservation
+from reservations.views import CreateReservationAsCommonUser, CreateReservationAsOwnerUser, listReservations, markAsAttended, cancelReservation, searchReservation
 from courts.views import updateCourt, deleteCourt, CreateCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
 from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
@@ -38,8 +38,7 @@ urlpatterns += patterns('proyectoFinal.complexes.views',
 urlpatterns += patterns('proyectoFinal.courts.views',
 						url(r'^addCourt/?$', CreateCourt.as_view()),
 						url(r'^searchcourt/?$', 'search_court'),
-						url(r'^courts_for_owners/?$', 'listCourtForOwner'),
-						url(r'^courts_for_commons/(?P<idcomplex>\d+)$', 'listCourtForCommon'),
+						url(r'^courts/(?P<idcomplex>\d+)$', 'listCourt'),
 						url(r'^editCourt/(?P<pk>\d+)/$', updateCourt.as_view()),
 						url(r'^updatecourts/?$', 'updatecourts'),
 						url(r'^deletecourts/?$', 'deletecourts'),
@@ -56,7 +55,9 @@ urlpatterns += patterns('proyectoFinal.teams.views',
 
 
 urlpatterns += patterns('proyectoFinal.reservations.views',
-						url(r'^newreservation/?$', ReservationCreate.as_view()),
+						url(r'^newreservation/?$', 'reservationCreate'),
+						url(r'^addreservationCommonUser/?$', CreateReservationAsCommonUser.as_view()),
+						url(r'^addreservationOwnerUser/?$', CreateReservationAsOwnerUser.as_view()),
 						url(r'^reservations/?$', listReservations.as_view()),
 						url(r'^updatereservation/(?P<pk>\d+)/$', markAsAttended.as_view()),
 						url(r'^cancelreservation/(?P<pk>\d+)/$', cancelReservation.as_view()),

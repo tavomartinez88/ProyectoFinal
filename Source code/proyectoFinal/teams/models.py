@@ -2,7 +2,6 @@ from django.db import models
 from proyectoFinal.users.models import UserProfile
 from django.conf import settings
 from django.contrib.auth.models import User
-#from proyectoFinal.tournaments.models import Tournament
 
 class Team(models.Model):
 	name = models.CharField(max_length=50, verbose_name='Nombre del equipo')

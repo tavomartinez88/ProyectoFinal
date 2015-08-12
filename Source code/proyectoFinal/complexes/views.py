@@ -1,4 +1,3 @@
-#from django.shortcuts import render
 from django.db.models import Q
 from django.shortcuts import render_to_response
 from models import Complex , User
@@ -18,7 +17,6 @@ class listComplex(ListView):
 	template_name = 'complexes/listComplexes.html'
 	model = Complex
 	context_object_name = 'complexes' # Nombre de la lista a recorrer desde listComplexes.html
-
 
 def search_complex(request):
   query = request.GET.get('q', '')
@@ -55,7 +53,8 @@ class deleteComplex(DeleteView):
   
 
 def register(request):
-  if request.user.is_staff:
+  usuario = UserProfile.objects.get(user=request.user)
+  if usuario.userType=='PR':
     if request.POST:
       cform = ComplexForm(request.POST) #create a ComplexForm
       if cform.is_valid() : #if the information in the form its correct

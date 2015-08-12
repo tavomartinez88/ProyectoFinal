@@ -6,7 +6,7 @@
 </head>
 <body>	
 	<h1>Usuarios Registrados</h1>
-
+	{%if users%}
 	<ul>
 		{% for user in users %} <!-- users -> Nombre de la lista especificado en views.py -->
 			<li><b> Nombre: </b> {{user.firstname}} </li>
@@ -21,4 +21,7 @@
 			<br><br>
 		{% endfor %}
 	</ul>
+	{%else%}
+		<p>No hay usuarios registrados</p>
+	{%endif%}
 </body>

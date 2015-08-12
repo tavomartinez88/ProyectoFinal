@@ -6,13 +6,16 @@
 </head>
 <body>	
 	<h1>Complejos Para Actualizar</h1>
-  
+  	{%if complexes%}
 		<ul>
 			{% for complex in complexes %} 
 				<li>{{complex.name}}   <a href="/updatecomplex/{{complex.id}}/"><button>Editar</button></a></li>
 				<br><br>
 			{% endfor %}
 		</ul>
+	{%else%}
+		<p>No se han encontrado complejos</p>
+	{%endif%}
   
 
 	

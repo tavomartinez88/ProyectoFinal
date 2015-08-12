@@ -25,7 +25,12 @@ class FixtureCreate(CreateView):
 	#restricted area for anonymous users
 	@method_decorator(login_required)
     	def dispatch(self, *args, **kwargs):
-    	    return super(FixtureCreate, self).dispatch(*args, **kwargs)
+    		usuario = UserProfile.objects.get(user=self.request.user)
+    		if usuario.userType=='PR':
+    			return super(FixtureCreate, self).dispatch(*args, **kwargs)
+    		else:
+    			raise Http404
+    		
 
 	
 	def form_valid(self, form):
@@ -39,16 +44,13 @@ class FixtureCreate(CreateView):
 
 @login_required	
 def listMatchForFixture(request,idfixture):
-		if request.user.is_staff:
-			userprofile = UserProfile.objects.get(user_id=request.user)
-			if userprofile.userType=='PR':
-				fix = Fixture.objects.get(id=idfixture)
-				partidos = Match.objects.filter(fixture_id=fix.id)
-				return render_to_response('fixtures/listMatchForFixture.html', {'partidos': partidos, 'fix':fix})
-			else : 
-				raise Http404
-		else :
-			raise Http404	
+	try:
+		fix = Fixture.objects.get(id=idfixture)
+		partidos = Match.objects.filter(fixture_id=fix.id)
+		return render_to_response('fixtures/listMatchForFixture.html', {'partidos': partidos, 'fix':fix})
+	except Exception:
+		raise Http404
+
 
 class listFixtures(ListView):
 	template_name = 'fixtures/listFixtures.html'

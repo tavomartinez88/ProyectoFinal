@@ -6,21 +6,24 @@
 </head>
 <body>	
 	<h1>Equipos Registrados</h1>
-
-	<ul>
-		{% for team in teams %} <!-- teams -> Nombre de la lista especificado en views.py -->
-			<li><b> Nombre del equipo: </b> {{team.name}} </li>
-			<br>
-			<li><b> Capitán: </b> {{team.captain.get_full_name}} </li>
-        	<br>
-        	{% for p in team.players.all %}
-        		<li><b>Jugador: </b> {{p.get_full_name}} </li> <!-- team.players.all returns all the players from each team -->
-        	{% endfor %}
-			<button><a href="/updateteam/2">Editar</a></button>
-			<br><br>
-		{% endfor %}
-	</ul>
-	<br><br><br><br>
-	<ul>
+	{%if teams%}
+		<ul>
+			{% for team in teams %} <!-- teams -> Nombre de la lista especificado en views.py -->
+				<li><b> Nombre del equipo: </b> {{team.name}} </li>
+				<br>
+				<li><b> Capitán: </b> {{team.captain.get_full_name}} </li>
+	        	<br>
+	        	{% for p in team.players.all %}
+	        		<li><b>Jugador: </b> {{p.get_full_name}} </li> <!-- team.players.all returns all the players from each team -->
+	        	{% endfor %}
+				<button><a href="/updateteam/2">Editar</a></button>
+				<br><br>
+			{% endfor %}
+		</ul>
+		<br><br><br><br>
+		<ul>
+	{%else%}
+		<p>No hay equipos</p>
+	{%endif%}
 
 </body>

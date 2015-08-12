@@ -6,13 +6,16 @@
 </head>
 <body>	
 	<h1>Equipos Para Eliminar</h1>
-	
+	{%if teams%}
 		<ul>
 			{% for team in teams %} 
 				<li>Nombre : {{team.name}} | Capitan : {{team.captain}}   <a href="/deleteteam/{{team.id}}/"><button>Eliminar</button></a></li>
 				<br><br>
 			{% endfor %}
 		</ul>
+	{%else%}
+		<p>No hay equipos para eliminar</p>
+	{%endif%}
 	
 </body>
 </html>
