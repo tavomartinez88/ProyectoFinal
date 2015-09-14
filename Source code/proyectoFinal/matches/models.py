@@ -20,7 +20,9 @@ class Match(models.Model):
 		(23,'23'),
 		(00,'00'),)
 	day = models.DateField(verbose_name='Fecha')
-	score = models.CharField(max_length=6,blank=True, null=True,verbose_name='Resultado')
+	#score = models.CharField(max_length=6,blank=True, null=True,verbose_name='Resultado')
+	scoreLocal = models.IntegerField(default=0,null=True,blank=True)
+	scoreVisit = models.IntegerField(default=0,null=True,blank=True)
 	hour = models.IntegerField(choices= hour_choices, verbose_name='Hora')
 	minutes = models.IntegerField(choices= minutes_choices,verbose_name='Minutos')
 	teamlocal = models.ForeignKey(Team, related_name='Equipo local' ,blank=True, null=True, on_delete=models.CASCADE,verbose_name='Nombre del equipo local')

@@ -1,3 +1,4 @@
+#encoding:utf-8
 """
 Django settings for proyectoFinal project....
 
@@ -25,9 +26,6 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__),'templates'), )
-
-
 ALLOWED_HOSTS = []
 
 MIDDLEWARE_CLASSES = (
@@ -51,7 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    #'django.contrib.messages',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
     'proyectoFinal.telephones',
     'proyectoFinal.citys',
@@ -64,6 +62,8 @@ INSTALLED_APPS = (
     'proyectoFinal.tournaments',
     'proyectoFinal.fixtures',
     'proyectoFinal.playersinfo',
+    'proyectoFinal.contacts',
+    'proyectoFinal.publicities',
 )
 
 ROOT_URLCONF = 'proyectoFinal.urls'
@@ -102,3 +102,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+TEMPLATE_DIRS = [ os.path.join(os.path.dirname(__file__), 'templates')]
+
+STATICFILES_DIRS = [ os.path.join(os.path.dirname(__file__), 'static')]
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'service.minutogol@gmail.com'
+EMAIL_HOST_PASSWORD = '36123477'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+

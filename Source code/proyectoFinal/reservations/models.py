@@ -27,3 +27,7 @@ class Reservation(models.Model):
 	minutes = models.IntegerField(choices= minutes_choices,verbose_name='Minutos')
 	user = models.ForeignKey(UserProfile, verbose_name='Usuario')
 	court = models.ForeignKey(Court, verbose_name='Cancha')
+	verificated = models.BooleanField(default=False)
+
+	class Meta:
+		ordering = ['-date']

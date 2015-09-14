@@ -1,3 +1,4 @@
+#encoding:utf-8
 from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
@@ -7,190 +8,351 @@ from django.template import RequestContext
 from models import Reservation
 from models import Court
 from proyectoFinal.users.models import UserProfile
+from proyectoFinal.publicities.models import Publicity
 from proyectoFinal.complexes.models import Complex
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
-from forms import ReservationForm
+from forms import ReservationFormCommonUser, ReservationFormOwnerUser
+from django.http import HttpResponse
+from datetime import datetime
+from datetime import date
+from django.shortcuts import redirect
 
+"""
+Esta funcion verifica si un usuario tiene 3 o mas reservaciones en las cuales no se presento.
+Si se detecta que tiene 3 o mas reservaciones sin presentarse se suspende al usuario por 30 dias
+"""
+def verificateSuspention(request):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect('/login')
+	else:
+		fecha_actual = date.today()
+		usuario = UserProfile.objects.get(user=request.user)
+		reservaciones = Reservation.objects.filter(user=usuario,verificated=False,date__lte=fecha_actual)
+		if reservaciones.count()>2:
+			usuario.suspended=True
+			usuario.dateSuspended=fecha_actual
+			usuario.save()
+			for reservacion in reservaciones:
+				reservacion.verificated=True
+				reservacion.save()
+			#retorno True porque quedo suspendido el usuario
+			return True
+		else:
+			#retorno False porque no quedo suspendido el usuario
+			return False
 
-@login_required
+"""
+Esta vista redirecciona a la vista correspondiente,dependiendo de si el usuario logueado es un usuario 
+comun o si el usuario es un usuario propietario.
+En caso de que el usuario logueado sea un usuario con permisos de usuario comun,verifica si esta
+habilitado para realizar reservas
+"""
 def reservationCreate(request):
-	usuario = UserProfile.objects.get(user=request.user)
+	try:
+		usuario = UserProfile.objects.get(user=request.user)
+	except Exception:
+		return HttpResponse('/login')
 	if usuario.userType=='CM':
-		return HttpResponseRedirect('/addreservationCommonUser')
+		if usuario.suspended==True:
+			dias = date.today()-usuario.dateSuspended
+			countDays = abs(dias.days)
+			if countDays>=30:
+				usuario.suspended=False
+				usuario.save()
+				return HttpResponseRedirect('/addreservationCommonUser')
+			else:
+				message = """Oops!!! ha ocurrido un inconveniente,estas suspendido debido a que has
+							acumulado 3 inasistencias.El periodo de suspensión es de 30 días,
+							te quedan """+str(object=30-countDays)+""" dias de suspensión.Para más 
+							información contactanos"""
+				sendmail=True
+				return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+		else:
+			status = verificateSuspention(request)
+			if not status:
+				return HttpResponseRedirect('/addreservationCommonUser')
+			else:
+				message = """Oops!!! ha ocurrido un inconveniente,estas suspendido debido a que has
+							acumulado 3 inasistencias.El periodo de suspensión es de 30 días.Para más 
+							información contactanos"""
+				sendmail=True
+				return render_to_response('404.html',{'message':message,'sendmail':sendmail})				
+			
 	else:
 		return HttpResponseRedirect('/addreservationOwnerUser')
 	
 
 class CreateReservationAsCommonUser(CreateView):
 	model = Reservation
-	fields = ['date', 'hour', 'minutes', 'court']
 	success_url = '/reservations'
+	form_class = ReservationFormCommonUser
 	
 	#restricted area for anonymous users
-	@method_decorator(login_required)
+	#@method_decorator(login_required)
     	def dispatch(self, *args, **kwargs):
-    		usuario = UserProfile.objects.get(user=self.request.user)
+    		if self.request.user.is_anonymous():
+    			return HttpResponseRedirect('/login')
+    		try:
+    			usuario = UserProfile.objects.get(user=self.request.user)
+    		except Exception:
+    			return HttpResponseRedirect('/login')
     		if usuario.userType=='CM':
-    			return super(CreateReservationAsCommonUser, self).dispatch(*args, **kwargs)
+				return super(CreateReservationAsCommonUser, self).dispatch(*args, **kwargs)
     		else:
-    			raise Http404
+				message = """Oops!!! ha ocurrido un inconveniente, no tienes permiso para 
+							realizar reservaciones a canchas.Para más información contactanos"""
+				sendmail=True
+				return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+
+	def get_context_data(self, **kwargs):
+	    # Call the base implementation first to get a context
+	    context = super(CreateReservationAsCommonUser, self).get_context_data(**kwargs)
+	    # Add in the publisher
+	    try:
+	    	context['publish_one'] = Publicity.objects.all().order_by('?').first()
+	    except Exception:
+	    	context['publish_one'] = False
+	    try:
+	    	context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).order_by('?').first()
+	    except Exception:
+	    	context['publish_second'] = False
+	    return context	    			
     		
 
 	#set the user that's logged in as the user that make the reservation
 	def form_valid(self, form):
-			user_logued = UserProfile.objects.get(user=self.request.user)
+			try:
+				user_logued = UserProfile.objects.get(user=self.request.user)
+			except Exception:
+				return HttpResponseRedirect('/login')
 			form.instance.user = user_logued
 			reservas = Reservation.objects.filter(date=form.instance.date,hour=form.instance.hour,minutes=form.instance.minutes,court=form.instance.court).count()
-			print reservas
-			if reservas == 0:
+			fecha_actual = date.today()
+			if reservas == 0 and form.instance.date>=fecha_actual:
 				return super(CreateReservationAsCommonUser, self).form_valid(form)
 			else:
-				raise Http404
+				if reservas == 0:
+					message = """Oops!!! ha ocurrido un inconveniente, ya existe una reservación para la 
+								 misma cancha en el mismo día y horario.Intente en otro dia o horario u cancha"""
+				else:
+					message = """Oops!!! ha ocurrido un inconveniente, la fecha de la reservación debe ser desde """+str(object=fecha_actual)+" en adelante"									
+				reservation=True
+				return render_to_response('404.html',{'message':message,'reservation':reservation},RequestContext(self.request, {}))
 
 
 class CreateReservationAsOwnerUser(CreateView):
 	model = Reservation
-	fields = ['date', 'hour', 'minutes', 'user', 'court']
 	success_url = '/reservations'
-	form_class = ReservationForm
+	form_class = ReservationFormOwnerUser
 	
 	#restricted area for anonymous users
-	@method_decorator(login_required)
-    	def dispatch(self, *args, **kwargs):
+  	def dispatch(self, *args, **kwargs):
+    		if self.request.user.is_anonymous():
+    			return HttpResponseRedirect('/login')
+    		try:
+    			usuario = UserProfile.objects.get(user=self.request.user)
+    		except Exception:
+    			return HttpResponseRedirect('/login')
     		if usuario.userType=='PR':
-    			return super(CreateReservationAsOwnerUser, self).dispatch(*args, **kwargs)
+				return super(CreateReservationAsOwnerUser, self).dispatch(*args, **kwargs)
     		else:
-    			raise Http404
+				message = """Oops!!! ha ocurrido un inconveniente, no tienes permiso para 
+							realizar reservaciones a canchas.Para más información contactanos"""
+				sendmail=True
+				return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+
+	def get_context_data(self, **kwargs):
+	    # Call the base implementation first to get a context
+	    context = super(CreateReservationAsOwnerUser, self).get_context_data(**kwargs)
+	    # Add in the publisher
+	    try:
+	    	context['publish_one'] = Publicity.objects.all().order_by('?').first()
+	    except Exception:
+	    	context['publish_one'] = False
+	    try:
+	    	context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).order_by('?').first()
+	    except Exception:
+	    	context['publish_second'] = False
+	    return context		    			
 
 	#set the user that's logged in as the user that make the reservation
 	def form_valid(self, form):
 			reservas = Reservation.objects.filter(date=form.instance.date,hour=form.instance.hour,minutes=form.instance.minutes,court=form.instance.court).count()
-			print reservas
-			if reservas == 0:
+			fecha_actual = date.today()
+			if reservas == 0 and form.instance.date>=fecha_actual:
 				return super(CreateReservationAsOwnerUser, self).form_valid(form)
 			else:
-				raise Http404
+				if reservas == 0:
+					message = """Oops!!! ha ocurrido un inconveniente, ya existe una reservación para la 
+								 misma cancha en el mismo día y horario.Intente en otro dia o horario u cancha"""
+				else:
+					message = """Oops!!! ha ocurrido un inconveniente, la fecha de la reservación debe ser desde """+str(object=fecha_actual)+" en adelante"									
+				reservation=True
+				return render_to_response('404.html',{'message':message,'reservation':reservation},RequestContext(self.request, {}))
 	
+"""
+Esta vista se encarga de listar reservaciones.Para ello el usuario debe estar logueado.
+Si el usuario tiene permisos de usuario comun solo mostrará aquellas reservaciones que lo tiene 
+asociado como responsable.
+Si el usuario tiene permisos de usuario propietario solo mostrará las reservaciones asociadas a complejos
+en donde es propietario
+"""
 class listReservations(ListView):
 	template_name = 'reservations/listReservations.html'
 	model = Reservation
 	context_object_name = 'reservations' # Nombre de la lista a recorrer desde listReservations.html
+	paginate_by = 6
 
+  	def dispatch(self, *args, **kwargs):
+    		if self.request.user.is_anonymous():
+    			return HttpResponseRedirect('/login')
+    		else:
+    			return super(listReservations, self).dispatch(*args, **kwargs)
+    		
 
 	def get_queryset(self):
-		if self.request.user.is_anonymous():
-			raise Http404
-		else:
+		try:
 			usuario = UserProfile.objects.get(user=self.request.user)
-			if usuario.userType=='CM':
-				return Reservation.objects.filter(user_id=UserProfile.objects.get(user=self.request.user))
-			else:
-				return Reservation.objects.filter(court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
+		except Exception:
+			return HttpResponseRedirect('/login')
+		if usuario.userType=='CM':
+			return Reservation.objects.filter(user_id=UserProfile.objects.get(user=self.request.user))
+		else:
+			return Reservation.objects.filter(court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
+
+	def get_context_data(self, **kwargs):
+	    # Call the base implementation first to get a context
+	    context = super(listReservations, self).get_context_data(**kwargs)
+	    # Add in the publisher
+	    try:
+	    	context['publish_one'] = Publicity.objects.all().order_by('?').first()
+	    except Exception:
+	    	context['publish_one'] = False
+	    try:
+	    	context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).order_by('?').first()
+	    except Exception:
+	    	context['publish_second'] = False
+	    return context				
 			
 			
-
-@login_required
-def updatereservations(request):
-	usuario = UserProfile.objects.get(user=request.user)
-	complejo = Complex.objects.filter(user=request.user)
-	court = Court.objects.filter(complex=Complex.objects.filter(user=request.user))
-	if usuario.userType=='CM':
-		reservations = Reservation.objects.filter(user_id=request.user.id, attended = False)
-	else:
-		reservations = Reservation.objects.filter(court=court, attended = False)			
-	return render_to_response('reservations/updateAnyReservations.html',{'complejo': complejo,"reservations": reservations})
-
-@login_required
-def deletereservations(request):
-	usuario = UserProfile.objects.get(user=request.user)
-	complejo = Complex.objects.filter(user=request.user)
-	court = Court.objects.filter(complex=Complex.objects.filter(user=request.user))
-	if usuario.userType=='CM':
-		reservations = Reservation.objects.filter(user_id=request.user.id, attended = False)
-	else:
-		reservations = Reservation.objects.filter(court=court, attended = False)	
-	return render_to_response('reservations/deleteAnyReservations.html',{'complejo': complejo,'reservations':reservations})
-		
+"""
+Esta vista se encarga de cancelar una reservacion.Para ello el usuario debe estar logueado y debe
+tener permisos de usuario propietario
+"""
 class markAsAttended(UpdateView):
 	model = Reservation
-	#fields = ['attended']
+	fields = ['attended']
 	template_name_suffix = '_update_form' # This is: modelName_update_form.html
 	success_url = '/reservations'
 
-	#restricted area for anonymous users
-	@method_decorator(login_required)
-    	def dispatch(self, *args, **kwargs):
-    	    return super(markAsAttended, self).dispatch(*args, **kwargs)
+   	def dispatch(self, *args, **kwargs):
+   		if self.request.user.is_anonymous():
+   			return HttpResponseRedirect('/login')
+   		else:
+	   		try:
+	   			usuario = UserProfile.objects.get(user=self.request.user)
+	   		except Exception:
+	   			return HttpResponseRedirect('/login')
+	   		if usuario.userType=='PR':
+	   		    return super(markAsAttended, self).dispatch(*args, **kwargs)
+	   		else:
+	   			message = """
+	   					  Oops!!! ha ocurrido un inconveniente, no tienes los permisos necesarios para 
+	   					  indicar la asistencia a esta reservacion.Para mayor información contactese.
+	   					  """
+	   			sendmail = True
+	   			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+   	    
    	
    	def get_object(self,queryset=None):
    		reserva = super(markAsAttended, self).get_object()
-   		usuario = UserProfile.objects.get(user=self.request.user)
+   		try:
+   			usuario = UserProfile.objects.get(user=self.request.user)
+   		except Exception:
+   			raise Http404
+   		fecha_actual = date.today()
    		if usuario.userType=='CM':
-   			if (reserva.user != self.request.user):
-   				raise Http404
-   			return reserva
+	   		message = """
+	   				  Oops!!! ha ocurrido un inconveniente, no tienes los permisos necesarios para 
+	   				  indicar la asistencia a esta reservacion.Para mayor información contactese.
+	   				  """
+	   		sendmail = True
+	   		return render_to_response('404.html',{'message':message,'sendmail':sendmail})  			
    		else:
    			res = Reservation.objects.filter(id=reserva.id,court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))).count()
-			if res<1:
-				raise Http404
-			else:
-				reserva = Reservation.objects.get(id=reserva.id,court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
-				return reserva    	    
-
-class cancelReservation(DeleteView):
-	model = Reservation
-	success_url = '/reservations'
-
-	#restricted area for anonymous users
-	@method_decorator(login_required)
-    	def dispatch(self, *args, **kwargs):
-    	    return super(cancelReservation, self).dispatch(*args, **kwargs)
-
-   	def get_object(self,queryset=None):
-   		reserva = super(cancelReservation, self).get_object()
-   		usuario = UserProfile.objects.get(user=self.request.user)
-   		if usuario.userType=='CM':
-   			if (reserva.user != self.request.user):
-   				raise Http404
-   			return reserva
-   		else:
-   			res = Reservation.objects.filter(id=reserva.id,court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))).count()
-			if res<1:
-				raise Http404
+			if res!=1:
+	   			message = """
+	   					  Oops!!! ha ocurrido un inconveniente, no se podido realizar la operación.
+	   					  Puede ser que no existe la reserva indicada.Para mayor información contactese.
+	   					  """
+	   			sendmail = True
+	   			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
 			else:
 				reserva = Reservation.objects.get(id=reserva.id,court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
 				return reserva
-			
-   		
+
+	def get_context_data(self, **kwargs):
+	    # Call the base implementation first to get a context
+	    context = super(markAsAttended, self).get_context_data(**kwargs)
+	    # Add in the publisher
+	    try:
+	    	context['publish_one'] = Publicity.objects.all().order_by('?').first()
+	    except Exception:
+	    	context['publish_one'] = False
+	    try:
+	    	context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).order_by('?').first()
+	    except Exception:
+	    	context['publish_second'] = False
+	    return context						  
+
+"""
+Esta vista se encarga de cancelar una reservacion.Para ello el usuario debe estar logueado
+"""
 
 
-@login_required
-def searchReservation(request):
-	#Class.objects.filter(date=datetime(2008,9,4)).query.as_sql()
-  query = request.GET.get('q', '')
-  usuario = UserProfile.objects.get(user=request.user)
-  if usuario.userType=='CM':
-  	if query:
-  		try:
-  			qset = (Q(date=query))
-			results = Reservation.objects.filter(qset)
-  		except Exception:
-  			raise Http404
+def cancelReservation(request,id_reservation):
+	if request.user.is_anonymous():
+		message = '''Oops!!! ha surgido un inconveniente.'''
+		listreservation = True
+		return render_to_response('404.html',{'message':message,'listreservation':listreservation}, RequestContext(request, {}))
 	else:
-		results = []
-  	return render_to_response("reservations/searchReservation.html",{"results": results,"query": query})
-  else:
-  	if query:
-  		try:
-  			qset = (Q(date=query))
-			results = Reservation.objects.filter(qset,court=Court.objects.filter(complex=Complex.objects.filter(user=request.user)))
-  		except Exception:
-  			raise Http404
-		
-	else:
-		results = []
-  	return render_to_response("reservations/searchReservation.html",{"results": results,"query": query})
-  
+		try:
+			fecha_actual = date.today()
+			reserva = Reservation.objects.get(id=id_reservation)
+			usuario = UserProfile.objects.get(user = request.user)
+		except Exception:
+				message = '''
+						   Oops!!! ha surgido un inconveniente.
+						  '''
+				listreservation = True
+				return render_to_response('404.html',{'message':message,'listreservation':listreservation}, RequestContext(request, {}))
+		if request.POST:
+			if usuario.userType=='CM':
+				if reserva.user == usuario and fecha_actual< reserva.date:
+					reserva.delete()
+					return HttpResponseRedirect('/reservations')
+				else:
+					message = '''
+							   Oops!!! ha surgido un inconveniente, no es posible cancelar esta reservación.Recuerde que para 
+							   cancelar una reservación deberá contar con 24 horas de anterioridad como mínimo.
+							  '''
+					listreservation = True
+					return render_to_response('404.html',{'message':message,'listreservation':listreservation}, RequestContext(request, {}))				
+			else:
+				if fecha_actual<=reserva.date and reserva.court.complex.user == request.user:
+					reserva.delete()
+					return HttpResponseRedirect('/reservations')
+				else:
+					message = '''
+							   Oops!!! ha surgido un inconveniente, no es posible cancelar esta reservación.Recuerde que para 
+							   cancelar una reservación tiene tiempo hasta el dia de la reserva,pasado ese tiempo no puede 
+							   cancelar dicha reservación.
+							  '''
+					listreservation = True
+					return render_to_response('404.html',{'message':message,'listreservation':listreservation}, RequestContext(request, {}))					
+		else:
+			if reserva != None:
+				return render_to_response('reservations/reservation_confirm_delete.html',{'reserva':reserva}, RequestContext(request, {}))

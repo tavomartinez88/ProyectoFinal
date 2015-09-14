@@ -9,3 +9,12 @@ class PlayerForm(forms.ModelForm):
     class Meta:
         model = PlayersInfo
         fields = ('goals', 'yellowCards', 'redCards')
+        widgets = {
+        	'goals': forms.TextInput(attrs={'class':'form-control','type':'number'}),
+        	'yellowCards': forms.TextInput(attrs={'class':'form-control','type':'number'}),
+        	'redCards': forms.TextInput(attrs={'class':'form-control','type':'number'}),
+        	
+    	}
+
+    def __init__(self, *args, **kwargs):
+        super(PlayerForm, self).__init__(*args, **kwargs)        

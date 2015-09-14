@@ -1,33 +1,297 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
-<head>
-    <title>Buscar Partidos</title>
-    <meta charset="utf-8">
-    
-</head>
-<body>
-  <h1 >Buscar Partidos</h1>
-  <form action="" method="GET">
-      Formato de Búsqueda: YYYY-MM-DD <br><br>
-    	<label for="q">Buscar: </label>
-    	<input type="text" name="q" value="{{ query|escape }}"> 
-        <input type="submit" value="Buscar">
-    </form>
+{%load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MinutoGol | buscar partidos</title>
+    <link rel='stylesheet' type='text/css' href="{% static "css/bootstrap.min.css" %}">
+    <link rel='stylesheet' type='text/css' href="{% static "css/bootstrap.css" %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript"> 
+      addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); 
+      function hideURLbar(){ 
+        window.scrollTo(0,1); 
+      } 
+    </script>
+    <link rel="stylesheet" type="text/css" media="all" href="{% static "css/blue.css" %}" />
+    <meta charset="UTF-8"/>
+    <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/menu.js" %} " type="text/javascript"></script>
+  </head>
+  <body>  
+    <div class="header_bg">
+      <div class="container">
+        <div class="header">
+          <div class="logo">
+            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+          </div>
+          <div class="h_menu">
+            <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
+            <nav>
+              <ul class="menu list-unstyled">
+                
+                
+                {% if user.is_anonymus %}
+                  
+                    <li><a href="/login/">Ingresar</a></li>
+                    <li><a href="/register/">Registrarse</a></li>
+                  
+                {%endif%}    
+                <li ><a href="#">Complejos</a>
+                    <ul class="sub-menu list-unstyled">
+                      <li ><a href="/complexes/">Ver complejos</a>
+                      <li ><a href="/searchcomplex/">Buscar complejo</a>
+                      {% ifequal user.get_profile.userType 'PR' %}
+                          <li ><a href="/newcomplex">Nuevo Complejo</a></li>
+                      {%endifequal%}
+                    </ul>
+                </li>
 
-  {% if query %}
-    <h2>Resultados para "{{ query|escape }}":</h2>
 
-    {% if results %}
-      <ul>
-      <label></label>
-      {% for match in results %}
-        <li>Equipo local :{{ match.teamlocal.name|escape }}|Equipo visitante :{{ match.teamVisitant.name|escape }}|Horario:{{ match.hour|escape }}:{{ match.minutes|escape }}|Resultado:{{ match.score|escape }}</l1><br>
+                <li ><a href="#">Canchas</a>
+                    <ul class="sub-menu list-unstyled">
+                      {% ifequal user.get_profile.userType 'PR' %}
+                          <li ><a href="/addCourt">Nueva cancha</a></li>
+                      {%endifequal%}
+                          <li ><a href="/searchcourt">Buscar cancha</a></li>
+                      
 
-      {% endfor %}
-      </ul><br>
-    {% else %}
-      <p>No hay reservas que coincidan con la busqueda solicitada</p>
-    {% endif %}
-  {% endif %}
-</body>
+                    </ul>
+                </li>
+
+                {%if user.is_authenticated%}
+                  
+                  <li ><a href="#">Reservaciones</a>
+                    <ul class="sub-menu list-unstyled">                     
+                      <li ><a href="/reservations">Ver reservaciones</a></li>
+                      <li ><a href="/newreservation">Nueva reservación</a></li>
+                    </ul>
+                </li>
+                {%endif%}
+                <li ><a href="#">Equipos</a>
+                    <ul class="sub-menu list-unstyled">                     
+                      <li ><a href="/teams">Ver equipos</a></li>
+                      <li ><a href="/searchteam">Buscar equipo</a></li>
+                      {% ifequal user.get_profile.userType 'CM' %}
+                          <li ><a href="/newteam">Nuevo equipo</a></li>
+                      {%endifequal%}
+                    </ul>
+                </li>
+                <li ><a href="#">Torneos</a>
+                    <ul class="sub-menu list-unstyled">                     
+                      <li ><a href="/tournaments">Ver torneos</a></li>
+                      <li ><a href="/searchtournament">Buscar torneo</a></li>
+                      {% ifequal user.get_profile.userType 'PR' %}
+                          <li ><a href="/newtournament">Nuevo torneo</a></li>
+                      {%endifequal%}
+                    </ul>
+                </li>
+                <li ><a href="#">Fixtures</a>
+                    <ul class="sub-menu list-unstyled">                                           
+                      
+                      {%if user.is_authenticated%}
+                      <li ><a href="/fixtures">Ver fixtures</a></li>
+                      {%endif%}
+                      <li ><a href="/searchfixture">Buscar fixtures</a></li>                    
+
+                    </ul>
+                </li>       
+                <li ><a href="#">Estadisticas</a>
+                    <ul class="sub-menu list-unstyled">          
+                      {%if user.is_authenticated%}
+                        <li ><a href="/playersinfo">Ver estadisticas</a></li>
+                      {%endif%}
+                      <li ><a href="/searchplayerinfo">Buscar estadisticas</a></li>                    
+
+                    </ul>
+                </li>                             
+                {%if user.is_authenticated%}                
+                  <li ><a href="#">Perfil</a>
+                    <ul class="sub-menu list-unstyled">
+                      {% ifequal user.get_profile.userType 'PR' %}
+                      <li ><a href="#">Publicidades</a>
+                          <ul class="sub-menu list-unstyled"> 
+                            <li ><a href="/newpublish">Nueva publicidad</a></li>
+                            <li ><a href="/publicities">Ver mis publicidades</a></li>                                  
+                            
+                          </ul>
+                      </li>
+                      {% endifequal%}                                         
+                      <li><a href="/update_user/{{user.get_profile.id}}">Actualizar perfil</a></li>
+                      <li>
+                        <a href="/update_telephone/{{user.get_profile.id}}">Actualizar telefono</a>
+                      </li>
+                      <li><a href="/delete_user/{{user.get_profile.id}}">Eliminar cuenta</a></li>
+                    </ul>
+                  </li>             
+                  <li style="background-color:#178bbb"><a href="/salir/">Salir</a></li>
+                {%endif%}
+                {% if not user.is_authenticated %}
+                    <li><a href="/register/">Registrarse</a></li>
+                    <li><a href="/login/">Ingresar</a></li>
+                {%endif%}
+              </ul>
+            </nav>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+  </div>
+    <div class="main_bg">
+    <div class="container">
+      <div class="main_grid1">
+        <h3 class="style pull-left">Complejos</h3>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    </div>
+    <div class="main_btm1">
+    <div class="container">
+      <div class="blog">
+          <div class="blog_main col-md-9">
+
+          <div class="blog_list">
+                  <form action="" method="GET">
+                    <div class="form-group">                    
+                    <p for="q">Buscar: </p>
+                    <input class="form-control" type="date" name="q" value="{{ query|escape }}"> 
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-default">Buscar</button>
+                    </div>
+                  </form>
+ 
+
+
+                  {% if query %}
+                  {% if results %}
+                  <div class="row">
+                     <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <tr>
+                          <td></td>
+                          <td><center><p>Local</p></center></td>
+                          <td></td>
+                          <td><center><p>Visitante</p></center></td>
+                          <td><center><p>Fecha</p></center></td>
+                          <td><center><p>Hora</p></center></td>
+                          <td><center><p>Resultado</p></center></td>                        
+                        </tr>
+                          {% for match in results %}
+                          <tr>
+                            <td><center><img src="{% static "images/others/team-256.png" %}" width="32" height="32"></center></td>
+                            <td><center><p>{{ match.teamlocal|escape }}</p></center></td>
+                            <td><center><img src="{% static "images/others/team-256.png" %}" width="32" height="32"></center></td>      
+                            <td><center><p>{{ match.teamVisitant|escape }}</p></center></td>
+                            <td><center><p>{{ match.day|escape }}</p></center></td>
+                            {%ifequal match.minutes 0 %}
+                              <td><center><p>{{ match.hour|escape }}</p></center></td>
+                            {%else%}
+                              <td><center><p>{{match.hour|escape}} : {{match.minutes|escape}}</p></center></td>
+                            {%endifequal%}
+                            <td><center><p>{{match.scoreLocal|escape }}-{{match.scoreVisit|escape }}</p></center></td>       
+                          </tr>
+                          {% endfor %}
+                          </table>
+                          <div class="alert alert-info alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            * Los resultados son (Local-Visitante)
+                          </div>
+                          
+                          </div>
+                          </div>
+                  {%else%}
+                      <div class="alert alert-info alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" 
+                       aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                       No hay partidos que coincidan con la fecha solicitada
+                      </div>                   
+                  {%endif%}
+                  {%endif%}
+                
+              <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="col-md-3 blog_right">
+            <h4>Publicidades</h4>
+            <ul class="ads_nav list-unstyled">
+              {%if publish_one%}
+              <li><a href="#"><img src="{{MEDIA_URL}}{{publish_one.img}}" alt=""> </a></li>
+             {%else%}
+              <li><a href="#"><img src="{% static "images/others/ads_pic.jpg"%}" alt=""></a></li>
+              {%endif%}
+              {%if publish_second%}
+              <li><a href="#"><img src="{{MEDIA_URL}}{{publish_second.img}}" alt=""> </a></li>         
+             {%else%}
+              <li><a href="#"><img src="{% static "images/others/ads_pic.jpg"%}" alt=""></a></li>
+              {%endif%}
+              <div class="clearfix"></div>
+            </ul>
+            <ul class="tag_nav list-unstyled">
+              <h4>tags</h4>
+                {% if not user.is_anonymus %}
+                <li><a href="reservations">Reservas</a></li>
+                {% endif%}
+                <li><a href="/tournaments/">Torneos</a></li>
+                <li><a href="/complexes/">Complejos deportivos</a></li>
+                <li><a href="/teams/">Equipos</a></li>
+                <li><a href="/playersinfo">Estadisticas</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="/fixtures/">Fixtures</a></li>
+                
+                {%endif%}
+                <li><a href="/searchmatch/">Buscar partidos</a></li>
+                <li class="active"><a href="/send_mail">Contacto</a></li>
+                <div class="clearfix"></div>
+            </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+    </div>
+    </div>
+    <div class="footer_bg"><!-- start footer -->
+    <div class="container">
+      <div class="footer">
+        <div class="col-md-4 footer1_of_3">
+          <div class="f_logo">
+            <h2 style="color:white">MinutoGol</h2>
+          </div>    
+          <p class="f_para">
+            <strong>MinutoGol</strong> es una herramienta que permite facilitar la administracion de 
+            complejos deportivos como asi tambien agilizar el proceso de reservas de canchas a diferentes complejos.
+          </p>
+         </div>
+         <div class="col-md-4 footer1_of_3"> 
+          <p>Telefono:&nbsp;<span>(+54) 0358 154228297</span></p>
+          <p>Telefono:&nbsp;<span>(+54) 0358 154864587</span></p>
+          <span class="">Email:&nbsp;<a href="mailto:minutogol@gmail.com">minutogol@gmail.com</a></span>
+        </div>
+        <div class="col-md-4 footer1_of_3">
+          <h4 style="color:white">Complejos deportivos </h4>
+          <ul class="list-unstyled f_list">
+            <li><p>Doble 5</p></li>
+            <li><p>Sol de mayo</p></li>
+            <li><p>Las aguilas</p></li>
+            <li><p>Super 7</p></li>
+            <li><p>Los gorriones</p></li>
+          </ul>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    </div>
+    <div class="footer1_bg"><!-- start footer1 -->
+    <div class="container">
+      <div class="footer1">
+        <div class="copy pull-left">
+          <p class="link">
+            <span>&#169; Todos los derechos reservados | Diseño:&nbsp;MinutoGol</span>
+          </p>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    </div>
+    <script src="{% static "js/bootstrap.min.js" %} " type="text/javascript"></script>
+  </body>
 </html>

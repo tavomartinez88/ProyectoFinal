@@ -9,3 +9,6 @@ class PlayersInfo(models.Model):
 	redCards = models.PositiveIntegerField(verbose_name='Tarjetas Rojas', blank='True')
 	user = models.ForeignKey(UserProfile, verbose_name='Usuario')
 	tournament = models.ForeignKey(Tournament, verbose_name='Torneo')
+
+	class Meta:
+		ordering = ['user']	
