@@ -1,6 +1,6 @@
 from django.db import models
-
 from proyectoFinal.users.models import User
+
 
 class Complex(models.Model):
 	name = models.CharField(max_length=25, verbose_name='Nombre')
@@ -11,4 +11,4 @@ class Complex(models.Model):
 	user = models.ForeignKey(User, blank=True,null=True,on_delete=models.CASCADE,verbose_name='Id del usuario')
   
 	def __str__(self):
-		return '%s %s'%(self.name, self.streetAddress)
+		return '%s %s'%(self.name.encode('utf8'), self.streetAddress.encode('utf8'))
