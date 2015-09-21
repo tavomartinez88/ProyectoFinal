@@ -22,7 +22,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -156,8 +156,8 @@
                       <td><center><p>Nombre del torneo</p></center></td>
                       <td><center><p>Ver fixture</p></center></td>
                       {% ifequal user.get_profile.userType 'PR' %}
+                      <td><center><p>eliminar fixture</p></center></td>
                       <td><center><p>Actualizar fixture</p></center></td>
-                      <td><center><p>Eliminar fixture</p></center></td>
                       <td><center><p>Agregar partido</p></center></td>
                       {%endifequal%}
                       

@@ -31,7 +31,7 @@ def verificateSuspention(request):
 		fecha_actual = date.today()
 		usuario = UserProfile.objects.get(user=request.user)
 		reservaciones = Reservation.objects.filter(user=usuario,verificated=False,date__lte=fecha_actual)
-		if reservaciones.count()>2:
+		if reservaciones.count()>3:
 			usuario.suspended=True
 			usuario.dateSuspended=fecha_actual
 			usuario.save()
@@ -54,7 +54,7 @@ def reservationCreate(request):
 	try:
 		usuario = UserProfile.objects.get(user=request.user)
 	except Exception:
-		return HttpResponse('/login')
+		return HttpResponseRedirect('/login')
 	if usuario.userType=='CM':
 		if usuario.suspended==True:
 			dias = date.today()-usuario.dateSuspended
@@ -183,6 +183,7 @@ class CreateReservationAsOwnerUser(CreateView):
 			reservas = Reservation.objects.filter(date=form.instance.date,hour=form.instance.hour,minutes=form.instance.minutes,court=form.instance.court).count()
 			fecha_actual = date.today()
 			if reservas == 0 and form.instance.date>=fecha_actual:
+				#form.instance.user_logued = self.request.user
 				return super(CreateReservationAsOwnerUser, self).form_valid(form)
 			else:
 				if reservas == 0:
@@ -192,6 +193,11 @@ class CreateReservationAsOwnerUser(CreateView):
 					message = """Oops!!! ha ocurrido un inconveniente, la fecha de la reservación debe ser desde """+str(object=fecha_actual)+" en adelante"									
 				reservation=True
 				return render_to_response('404.html',{'message':message,'reservation':reservation},RequestContext(self.request, {}))
+
+	def get_form_kwargs(self):
+    		kwargs = super(CreateReservationAsOwnerUser, self).get_form_kwargs()
+    		kwargs.update({'user_logued': self.request.user})
+    		return kwargs				
 	
 """
 Esta vista se encarga de listar reservaciones.Para ello el usuario debe estar logueado.
@@ -274,25 +280,10 @@ class markAsAttended(UpdateView):
    		except Exception:
    			raise Http404
    		fecha_actual = date.today()
-   		if usuario.userType=='CM':
-	   		message = """
-	   				  Oops!!! ha ocurrido un inconveniente, no tienes los permisos necesarios para 
-	   				  indicar la asistencia a esta reservacion.Para mayor información contactese.
-	   				  """
-	   		sendmail = True
-	   		return render_to_response('404.html',{'message':message,'sendmail':sendmail})  			
+   		if reserva.court.complex.user == self.request.user:
+   			return reserva
    		else:
-   			res = Reservation.objects.filter(id=reserva.id,court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user))).count()
-			if res!=1:
-	   			message = """
-	   					  Oops!!! ha ocurrido un inconveniente, no se podido realizar la operación.
-	   					  Puede ser que no existe la reserva indicada.Para mayor información contactese.
-	   					  """
-	   			sendmail = True
-	   			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
-			else:
-				reserva = Reservation.objects.get(id=reserva.id,court=Court.objects.filter(complex=Complex.objects.filter(user=self.request.user)))
-				return reserva
+   			raise Http404
 
 	def get_context_data(self, **kwargs):
 	    # Call the base implementation first to get a context
@@ -315,9 +306,7 @@ Esta vista se encarga de cancelar una reservacion.Para ello el usuario debe esta
 
 def cancelReservation(request,id_reservation):
 	if request.user.is_anonymous():
-		message = '''Oops!!! ha surgido un inconveniente.'''
-		listreservation = True
-		return render_to_response('404.html',{'message':message,'listreservation':listreservation}, RequestContext(request, {}))
+		return HttpResponseRedirect('/login')
 	else:
 		try:
 			fecha_actual = date.today()

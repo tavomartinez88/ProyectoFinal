@@ -22,7 +22,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -153,6 +153,7 @@
 	          <div class="blog_list">       	    
 				{%if fix%}
 				<div class="table-responsive">
+            {%if partidos%}
                   <table class="table table-bordered">
                     <tr>
                       <td><center></center></td>
@@ -168,8 +169,7 @@
                       {%endifequal%}
 
                       
-                    </tr>
-                    {%if partidos%}
+                    </tr>            
 						{% for match in partidos %}
 							<tr>
 								<td><center><img src="{% static "images/others/team-256.png" %}" width="32" height="32"></center></td>

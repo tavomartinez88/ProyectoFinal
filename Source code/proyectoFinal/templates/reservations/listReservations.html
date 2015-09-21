@@ -21,7 +21,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -174,7 +174,7 @@
 						<tr>
 	                      <td><center>Fecha de reserva</center></td>
 	                      <td><center>Horario</center></td>
-	                      <td><center>Realizada por</center></td>
+	                      <td><center>Responsable</center></td>
 	                      <td><center>Cancha reservada(Tipo de Piso/Tipo de cancha/Complejo)</center></td>
 	                      <td><center>Asistio?</center></td>
 	                      <td><center>Cancelar</center></td>
@@ -186,13 +186,17 @@
 
 	                    	<tr>
 	                    		<td><center>{{reservation.date}}</center></td>
-								<td><center>{{reservation.hour}}:{{reservation.minutes}}</center></td>
-								<td><center>{{reservation.user.firstname}} {{reservation.user.lastname}}</center></td>
-								<td><center>{{reservation.court}}</center></td>
-								<td><center>{{reservation.attended|yesno:"Si,No"}}</center></td>
-								<td>
-									<center><a href="/cancelreservation/{{reservation.id}}" class="btn btn-primary" role="button">Cancelar</a></center>
-								</td>
+                          {%ifequal reservation.minutes 0%}
+                            <td><center>{{reservation.hour}}</center></td>
+                          {%else%}
+          								  <td><center>{{reservation.hour}}:{{reservation.minutes}}</center></td>
+                          {%endifequal%}
+          								<td><center>{{reservation.user.firstname}} {{reservation.user.lastname}}</center></td>
+          								<td><center>{{reservation.court}}</center></td>
+          								<td><center>{{reservation.attended|yesno:"Si,No"}}</center></td>
+          								<td>
+          									<center><a href="/cancelreservation/{{reservation.id}}" class="btn btn-primary" role="button">Cancelar</a></center>
+          								</td>
                 {% ifequal user.get_profile.userType 'PR' %}
                   <td>
                     <center><a href="/updatereservation/{{reservation.id}}" class="btn btn-primary" role="button">Notificar</a></center>

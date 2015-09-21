@@ -21,7 +21,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -165,7 +165,7 @@
                 <div class="table-responsive">
                   <table class="table table-bordered">
                     <tr>
-                      <td>#</td>
+                      <td><center>Id/Nombre</center></td>
                       
                       <td><center>Luz artificial</center></td>
                       <td><center>Tipo de piso</center></td>
@@ -176,7 +176,7 @@
                     {% for court in results %}
                       <tr>
                         
-                        <td>{{court.id}}</td>
+                        <td><center>{{court.name}}</center></td>
                         <td><center>{{court.artificial_light|yesno:"Si,No"}}</center></td>
                         <td><center>{{court.get_lawnType_display}}</center></td>
                         <td><center>{{court.get_soccerType_display}}</center></td>

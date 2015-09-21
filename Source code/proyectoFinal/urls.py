@@ -8,7 +8,8 @@ from contacts.views import contactomail
 from reservations.views import CreateReservationAsCommonUser, CreateReservationAsOwnerUser, listReservations, markAsAttended, cancelReservation
 from courts.views import updateCourt, deleteCourt, CreateCourt
 from tournaments.views import TournamentCreate, listTournaments, markAsFinished, cancelTournament, searchTournament
-from fixtures.views import FixtureCreate, listFixtures, updateFixture, deleteFixture, searchFixtures
+from fixtures.views import FixtureCreate, listFixtures, updateFixture, searchFixtures
+from fixtures.views import deleteFixture
 from playersinfo.views import listPlayersInfo, updatePlayerInfo, searchPlayerInfo
 from publicities.views import nueva_publicidad, listPublish, update_publish, deletePublicity
 from django.views.generic import TemplateView 
@@ -90,7 +91,7 @@ urlpatterns += patterns('proyectoFinal.fixtures.views',
 						url(r'^newfixture/?$', FixtureCreate.as_view()),
 						url(r'^fixtures/?$', listFixtures.as_view()),
 						url(r'^updatefixture/(?P<pk>\d+)/$', updateFixture.as_view()),
-						url(r'^deletefixture/(?P<pk>\d+)/$', deleteFixture.as_view()),
+						url(r'^deletefixture/(?P<idfixture>\d+)/$', 'deleteFixture'),
 						url(r'^searchfixture/?$', 'searchFixtures'),)
 
 urlpatterns += patterns('proyectoFinal.playersinfo.views',

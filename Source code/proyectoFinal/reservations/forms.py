@@ -1,6 +1,8 @@
 #encoding:utf-8
 from django import forms
 from models import Reservation
+from models import Court
+from proyectoFinal.complexes.models import Complex
 from proyectoFinal.users.models import UserProfile
 from django.contrib.admin import widgets 
 from django.forms.widgets import DateInput , DateTimeInput, TimeInput
@@ -53,7 +55,7 @@ class ReservationFormOwnerUser(forms.ModelForm):
             #retorno False porque no quedo suspendido el usuario
             return False
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user_logued, *args, **kwargs):
         super(ReservationFormOwnerUser, self).__init__(*args, **kwargs)
         usuarios = UserProfile.objects.filter(userType="CM")
         #print usuarios.count()
@@ -66,12 +68,10 @@ class ReservationFormOwnerUser(forms.ModelForm):
                     user_current.save()
             else:
                 self.verificateSuspention(user_current)
-        print UserProfile.objects.filter(userType="CM", suspended=False).count()
-
-            
-                
+             
 
         self.fields['user'] = forms.ModelChoiceField(queryset=UserProfile.objects.filter(userType="CM", suspended=False))
+        self.fields['court'] = forms.ModelChoiceField(queryset=Court.objects.filter(complex=Complex.objects.filter(user=user_logued)))
         for field in self.fields:
             # Recorremos todos los campos del modelo para añadirle class="form-control
             self.fields[field].widget.attrs.update({'class': 'form-control'})

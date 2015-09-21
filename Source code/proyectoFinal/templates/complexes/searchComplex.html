@@ -21,7 +21,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -173,7 +173,7 @@
                       <td><center>Cantina</center></td>
                       <td><center>Vestuarios</center></td>
                       <td><center>Responsable</center></td>
-                      <td><center>Operacion</center></td>
+
                       
                     </tr>
                     {% for complex in results %}
@@ -186,16 +186,11 @@
                         <td><center>{{complex.buffet|yesno:"Si,No"}}</center></td>
                         <td><center>{{complex.lockerRoom|yesno:"Si,No"}}</center></td>
                         <td><center>{{complex.user.get_full_name}}</center></td>
-                        
 
-                        <td><a href="/courts/{{complex.id}}" class="btn btn-primary" role="button">Visitar canchas
-                        </a></td>
+
                          
                       </tr>
-                                              {% ifequal request.user.get_profile.userType 'PR' %}
-                            <td><a href="/updatecomplex/{{complex.id}}" class="btn btn-primary" role="button">Actualizar complejo</a>
-                            <a href="/deletecomplex/{{complex.id}}" class="btn btn-primary" role="button">Eliminar complejo</a></td>
-                        {%endifequal%}
+
                     {% endfor %}
                   </table>
                   

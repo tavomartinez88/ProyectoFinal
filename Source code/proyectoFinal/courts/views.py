@@ -111,11 +111,7 @@ class updateCourt(UpdateView):
     #select the user in base of the complex
     usuario = UserProfile.objects.get(user_id = complejo.user_id)
     if not usuario.user == self.request.user:
-      message = '''
-                Oops!!! ha ocurrido un inconveniente, no puedes actualizar esta cancha porque no eres su 
-                propietario.
-                '''
-      return render_to_response('404.html',{'message':message})
+      raise Http404
     return cancha    
 
 
@@ -166,7 +162,7 @@ class deleteCourt(DeleteView):
 
   def dispatch(self, *args, **kwargs):
     try:
-      usuario = UserProfile.objetcs.get(user = self.request.user)
+      usuario = UserProfile.objects.get(user = self.request.user)
     except Exception:
       return HttpResponseRedirect('/login')
     if self.request.user.is_anonymous() or usuario.userType=='CM':
@@ -185,11 +181,7 @@ class deleteCourt(DeleteView):
     #select the user in base of the complex
     usuario = UserProfile.objects.get(user_id = complejo.user_id)
     if not usuario.user == self.request.user:
-      message = '''
-                Oops!!! ha ocurrido un inconveniente, no puedes eliminar esta cancha porque no eres su 
-                propietario.
-                '''
-      return render_to_response('404.html',{'message':message})
+      raise Http404
     return cancha  
 
   def get_context_data(self, **kwargs):

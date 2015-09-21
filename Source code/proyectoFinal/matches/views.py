@@ -68,13 +68,13 @@ def addmatch(request,idfixture):
 				if mform.cleaned_data['teamlocal']==mform.cleaned_data['teamVisitant'] and mform.cleaned_data['day']>=f.date:
 					mform = MatchForm()
 					fixture_id = Fixture.objects.get(id=idfixture)
-					message_teams_incorrect = "el equipo local no pude ser igual que el visitante"
+					message_teams_incorrect = "el equipo local no pude ser igual al visitante"
 					return render_to_response('matches/addmatch.html', {'publish_one':publish_one,'publish_second':publish_second,'mform': mform, 'fixture_id':fixture_id,'message_teams_incorrect':message_teams_incorrect}, RequestContext(request, {}))
 				    
 				if mform.cleaned_data['teamlocal']==mform.cleaned_data['teamVisitant'] and mform.cleaned_data['day']<f.date:
 					mform = MatchForm()
 					fixture_id = Fixture.objects.get(id=idfixture)
-					message_teams_incorrect = "el equipo local no pude ser igual que el visitante"
+					message_teams_incorrect = "el equipo local no pude ser igual al visitante"
 					message_day_incorrect = "La fecha debe ser mayor o igual a "+str(object=f.date)
 					return render_to_response('matches/addmatch.html', {'publish_one':publish_one,'publish_second':publish_second,'mform': mform, 'fixture_id':fixture_id,'message_teams_incorrect':message_teams_incorrect, 'message_day_incorrect':message_day_incorrect}, RequestContext(request, {}))
 				if usuario.userType == 'PR':
@@ -89,7 +89,7 @@ def addmatch(request,idfixture):
 			if verify_fixture == 0:
 				message = """
 						  Oops!!!, ha ocurrido un inconveniente, el fixture al que intenta agregar un 
-						  partido aún no ha sido creado.Si el inconveniente persiste contactese.
+						  partido aún no ha sido creado o no es de su propiedad.Si el inconveniente persiste contactese.
 						  """
 				sendmail = True
 				return render_to_response('404.html',{'message':message,'sendmail':sendmail})
@@ -130,18 +130,20 @@ class deleteMatch(DeleteView):
   		else:
   			try:
   				usuario = UserProfile.objects.get(user=self.request.user)
-  				if usuario.userType=='CM':
-  					message = """
-  							  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios
-  							  para eliminar este partido, intenta más tarde.Si aún persiste el inconveniente
-  							  contactanos.
-  							  """
-  					sendmail = True
-  					return render_to_response('404.html',{'message':message,'sendmail':sendmail})
-  				else:
-  					return super(deleteMatch, self).dispatch(*args, **kwargs)
-  			except Exception, e:
-  				return HttpResponseRedirect('/login')
+  			except Exception:
+  				usuario = None
+  				
+  			if usuario.userType=='CM':
+  				message = """
+  						  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios
+  						  para eliminar este partido, intenta más tarde.Si aún persiste el inconveniente
+  						  contactanos.
+  						  """
+  				sendmail = True
+  				return render_to_response('404.html',{'message':message,'sendmail':sendmail})  					
+  			else:
+  				return super(deleteMatch, self).dispatch(*args, **kwargs)
+
 
   	def get_object(self, queryset=None):
 	    #select the court object that we want to update
@@ -152,13 +154,7 @@ class deleteMatch(DeleteView):
 	    complejo = Complex.objects.get(id=torneo.complex_id)
 	    usuario = UserProfile.objects.get(user_id = complejo.user_id)
 	    if not usuario.user == self.request.user and usuario.userType == 'PR':
-	        message = """
-	        		  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios
-	        		  para eliminar este partido, intenta más tarde.Si aún persiste el inconveniente
-	        		  contactanos.
-	        		  """
-	        sendmail = True
-	        return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+	    	raise Http404
 	    return partido
 
 	def get_context_data(self, **kwargs):
@@ -203,18 +199,17 @@ class addResult(UpdateView):
   		else:
   			try:
   				usuario = UserProfile.objects.get(user=self.request.user)
-  				if usuario.userType=='CM':
-  					message = """
-  							  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios
-  							  para modificar el resultado de  este partido, intenta más tarde.Si aún persiste el inconveniente
-  							  contactanos.
-  							  """
-  					sendmail = True
-  					return render_to_response('404.html',{'message':message,'sendmail':sendmail})
-  				else:
-  					return super(deleteMatch, self).dispatch(*args, **kwargs)
-  			except Exception, e:
-  				return HttpResponseRedirect('/login')
+  			except Exception:
+  				usuario = None
+  			if usuario.userType=='CM':
+				message = """
+						  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios
+						  para modificar el resultado de  este partido, intenta más tarde.Si aún persiste el inconveniente
+						  contactanos."""
+				sendmail = True
+				return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+  			else:
+  				return super(addResult, self).dispatch(*args, **kwargs)
 
   	def get_object(self, queryset=None):
 	    #select the court object that we want to update
@@ -225,13 +220,7 @@ class addResult(UpdateView):
 	    complejo = Complex.objects.get(id=torneo.complex_id)
 	    usuario = UserProfile.objects.get(user_id = complejo.user_id)
 	    if not usuario.user == self.request.user and usuario.userType == 'PR':
-	        message = """
-	        		  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios
-	        		  para eliminar este partido, intenta más tarde.Si aún persiste el inconveniente
-	        		  contactanos.
-	        		  """
-	        sendmail = True
-	        return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+	    	raise Http404
 	    return partido	
 
 	def get_context_data(self, **kwargs):
@@ -280,7 +269,7 @@ el usuario este identificado
 """
 def listMatchForFixture(request,idfixture):
 	if request.user.is_anonymous():
-		raise Http404
+		return HttpResponseRedirect('/login')
 	try:
 		publish_one = Publicity.objects.all().order_by('?').first()
 	except Exception:

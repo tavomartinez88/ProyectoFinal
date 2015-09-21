@@ -78,7 +78,7 @@ class listTournaments(ListView):
 			try:
 				usuario = UserProfile.objects.get(user = self.request.user)
 			except Exception:
-				raise Http404
+				usuario = None
 			if usuario.userType=='CM':
 				return Tournament.objects.all()
 			else:
@@ -116,11 +116,11 @@ def teamsinscriptions(request,idtournament):
   except Exception:
 	publish_one = False
   try:
-	publish_second = Publicity.objects.all().exclude(id=context['publish_one'].id).first()
+	publish_second = Publicity.objects.all().exclude(id=publish_one.id).order_by('?').first()
   except Exception:
   	publish_second = False
   try:
-	publish_third = Publicity.objects.all().exclude(id=publish_one.id).exclude(id=publish_second.id).first()
+	publish_third = Publicity.objects.all().exclude(id=publish_one.id).exclude(id=publish_second.id).order_by('?').first()
   except Exception:
   	publish_third = False  	
   return render_to_response("tournaments/teamsinscriptions.html",{"torneo": torneo,'publish_one':publish_one,'publish_second':publish_second,'publish_third':publish_third}, RequestContext(request, {}))
@@ -142,16 +142,16 @@ class markAsFinished(UpdateView):
    		try:
    			usuario = UserProfile.objects.get(user = self.request.user)
    		except Exception:
-   			raise Http404
+   			usuario = None
    		if usuario.userType=='PR':
    			return super(markAsFinished, self).dispatch(*args, **kwargs)
    		else:
 		   	message = """
 		   			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-		   			  poder dar finalización este torneo.Para mas información contactese.
+		   			  poder dar finalización este torneo.Para más información contactese.
 		   			  """
 		   	sendmail = True		  
-		   	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+		   	return render_to_response('404.html',{'message':message,'sendmail':sendmail}, RequestContext(self.request, {}))
 
 	def get_context_data(self, **kwargs):
 	    # Call the base implementation first to get a context
@@ -191,21 +191,20 @@ class cancelTournament(DeleteView):
 	model = Tournament
 	success_url = '/tournaments'
 
-	def get_form_kwargs(self):
-		try:
-			usuario = UserProfile.objects.get(user=request.user)
-		except Exception:
+   	def get_object(self, queryset=None):
+		tournament = super(cancelTournament,self).get_object()
+		usuario = UserProfile.objects.get(user=self.request.user)
+		count_tournaments = Tournament.objects.filter(id=tournament.id,complex=Complex.objects.filter(user=self.request.user)).count()
+		if self.request.user.is_anonymous():
 			raise Http404
-		if usuario.userType=='PR':
-			kwargs = super(cancelTournament, self).get_form_kwargs()
-   			return kwargs
-   		else:
-   			message = """
-		   			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-		   			  poder crear un torneo.Para mas información contactese.
-		   			  """
-		   	sendmail = True		  
-		   	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+		else:
+			if usuario.userType=='CM':
+				raise Http404
+			else:
+				if count_tournaments==1:
+					return tournament
+				else:
+					raise Http404	
 
 	def get_context_data(self, **kwargs):
 	    # Call the base implementation first to get a context
@@ -227,16 +226,16 @@ class cancelTournament(DeleteView):
     		try:
     			usuario = UserProfile.objects.get(user=self.request.user)
     		except Exception:
-    			raise Http404
+    			return HttpResponseRedirect('/login')
     		if usuario.userType=='PR':
     			return super(cancelTournament, self).dispatch(*args, **kwargs)
     		else:
 	   			message = """
 			   			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-			   			  poder crear un torneo.Para mas información contactese.
+			   			  poder cancelar este torneo.Para más información contactese.
 			   			  """
 			   	sendmail = True		  
-			   	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+			   	return render_to_response('404.html',{'message':message,'sendmail':sendmail},RequestContext(self.request, {}))
     		
 
 """
@@ -250,16 +249,14 @@ def searchTournament(request):
 		results = Tournament.objects.filter(qset).distinct()
   	except Exception:
   		raise Http404
-
-
   else:
 	results = []
-	try:
-	   	publish_one = Publicity.objects.all().order_by('?').first()
-	except Exception:
-	   	publish_one = False
-	try:
-	  	publish_second = Publicity.objects.all().exclude(id=context['publish_one'].id).first()
-	except Exception:
-	   	publish_second = False
+  try:
+   	publish_one = Publicity.objects.all().order_by('?').first()
+  except Exception:
+   	publish_one = False
+  try:
+  	publish_second = Publicity.objects.all().exclude(id=publish_one.id).first()
+  except Exception:
+   	publish_second = False
   return render_to_response("tournaments/searchTournament.html",{"results": results,"query": query,'publish_one':publish_one,'publish_second':publish_second},RequestContext(request, {}))

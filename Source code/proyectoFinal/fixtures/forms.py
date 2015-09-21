@@ -3,12 +3,15 @@ from django import forms
 from models import Fixture
 from models import Tournament
 from proyectoFinal.complexes.models import Complex
+from django.forms.widgets import DateInput , DateTimeInput, TimeInput
+from django.contrib.admin.widgets import AdminDateWidget
+from datetime import date
 
 class FixtureForm(forms.ModelForm):
     class Meta:
         model = Fixture
         widgets = {
-            'date':forms.DateInput(attrs={'class':'form-control', 'type':'date'},format="%Y/%m/%d"),
+            'date':forms.DateInput(attrs={'class':'form-control', 'id':'datepicker'},format="%d/%m/%Y"),
         }            
         
 
@@ -26,7 +29,8 @@ class FixtureFormUpdate(forms.ModelForm):
         model = Fixture
         fields = ['name','date']
         widgets = {
-            'date':forms.DateInput(attrs={'class':'form-control', 'type':'date'},format="%Y/%m/%d"),
+            
+            'date':forms.DateInput(attrs={'class':'form-control', 'id':'datepicker'},format="%d/%m/%Y"),
         }
         
 

@@ -88,49 +88,41 @@ debe estar logueado,debe ser usuario propietario y debe ser el propietario del c
 class deleteComplex(DeleteView):
   model = Complex
   success_url = '/complexes'
-  def get_form_kwargs(self):
-  	kwargs = super(deleteComplex, self).get_form_kwargs()
-  	#kwargs.update({'user': self.request.user})
-  	return kwargs
-
-  def get_context_data(self, **kwargs):
-      # Call the base implementation first to get a context
-      context = super(deleteComplex, self).get_context_data(**kwargs)
-      # Add in the publisher
-      try:
-        context['publish_one'] = Publicity.objects.all().order_by('?').first()
-      except Exception:
-        context['publish_one'] = False
-      try:
-        context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).order_by('?').last()
-      except Exception:
-        context['publish_second'] = False
-      return context        
-
 
   def dispatch(self, *args, **kwargs):
-    try:
-      usuario = UserProfile.objects.get(user = self.request.user)
-    except Exception:
+    if self.request.user.is_anonymous():
       return HttpResponseRedirect('/login')
-    if usuario.userType== 'CM' or self.request.user.is_anonymous():
-      message = 'Oops!!! ha ocurrido un inconveniente, para poder eliminar el complejo debes ser el propietario del complejo'
-      return render_to_response('404.html',{'message':message})
-    else:
-      return super(deleteComplex, self).dispatch(*args, **kwargs)
+    try:
+      usuario_logued = UserProfile.objects.get(user=self.request.user)
+    except Exception:
+      usuario_logued = None
+    if usuario_logued.userType=='CM':
+      message = 'Oops!!! ha ocurrido un inconveniente, para poder eliminar el complejo debes ser el propietario de dicho complejo'
+      return render_to_response('404.html',{'message':message}, RequestContext(self.request, {}))
+    return super(deleteComplex, self).dispatch(*args, **kwargs)
 
   def get_object(self, queryset=None):
-    #select the court object that we want to update
-    complejo = super(deleteComplex, self).get_object()
     try:
-      usuario = UserProfile.objects.get(user_id = complejo.user_id)
+      complejo = super(deleteComplex, self).get_object()
+      usuario = UserProfile.objects.get(user=complejo.user)
     except Exception:
-      return HttpResponseRedirect('/login')
-    
-    if not usuario.user == self.request.user and usuario.userType == 'PR':
-      message = 'Oops!!! ha ocurrido un inconveniente, para poder eliminar el complejo debes ser el propietario del complejo'
-      return render_to_response('404.html',{'message':message})
-    return complejo     
+      usuario = None
+    if usuario.user==self.request.user and usuario.userType=='PR':
+      return complejo
+    else:
+      raise Http404
+
+  def get_context_data(self, **kwargs):
+    context = super(deleteComplex, self).get_context_data(**kwargs)
+    try:
+      context['publish_one'] = Publicity.objects.all().order_by('?').first()
+    except Exception:
+      context['publish_one'] = False
+    try:
+      context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).order_by('?').last()
+    except Exception:
+      context['publish_second'] = False
+    return context    
   
 """
 Esta vista se encarga de realizar la creación de un complejo,para ello se debera ser un usuario propietario
@@ -208,18 +200,20 @@ class updateComplex(UpdateView):
 
 
   def dispatch(self, *args, **kwargs):
+    if self.request.user.is_anonymous():
+      return HttpResponseRedirect('/login')
     try:
       usuario = UserProfile.objects.get(user = self.request.user)
     except Exception:
-      return HttpResponseRedirect('/login')    
-    if usuario.userType== 'CM' or self.request.user.is_anonymous():
+      usuario = None    
+    if usuario.userType == 'CM':
       message = '''
                 Oops!!! ha ocurrido un error,para poder actualizar este complejo debes ser el propietario
                 y contar con los permisos necesarios para poder realizar la operación. Intenta mas tarde y 
                 si persiste el inconveniente contactanos.
                 '''
       sendmail = True
-      return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+      return render_to_response('404.html',{'message':message,'sendmail':sendmail},RequestContext(self.request, {}))
     else:
       return super(updateComplex, self).dispatch(*args, **kwargs)
 
@@ -229,17 +223,10 @@ class updateComplex(UpdateView):
       usuario = UserProfile.objects.get(user_id = complejo.user_id)
     except Exception:
       return HttpResponseRedirect('/login')
-    if not usuario.user == self.request.user and usuario.userType == 'PR':
-      message = '''
-                Oops!!! ha ocurrido un error,para poder actualizar este complejo debes ser el propietario
-                y contar con los permisos necesarios para poder realizar la operación. Intenta mas tarde y 
-                si persiste el inconveniente contactanos.
-                '''
-      sendmail = True
-      return render_to_response('404.html',{'message':message,'sendmail':sendmail})
-    return complejo    
-
-
+    if usuario.user == self.request.user and usuario.userType == 'PR':
+      return complejo
+    else:
+      raise Http404
 
 
 

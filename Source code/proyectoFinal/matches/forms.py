@@ -7,9 +7,7 @@ class MatchForm(forms.ModelForm):
         model = Match
         fields = ('day', 'hour', 'minutes', 'teamlocal' , 'teamVisitant')
         widgets = {
-            #'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Nombre del equipo'}),
-            #'day':forms.DateInput(format="%m/%d/%Y")
- 			'day':forms.DateInput(attrs={'class':'form-control', 'type':'date'},format="%Y/%m/%d"),
+ 			'day':forms.DateInput(attrs={'class':'form-control', 'id':'datepicker'},format="%Y/%m/%d"),
  			'hour':forms.Select(attrs={'class':'form-control'}),
  			'minutes':forms.Select(attrs={'class':'form-control'}),
  			'teamlocal':forms.Select(attrs={'class':'form-control'}),

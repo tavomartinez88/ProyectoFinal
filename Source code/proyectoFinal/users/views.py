@@ -100,7 +100,6 @@ class userUpdate(UpdateView):
 			kwargs = super(userUpdate, self).get_form_kwargs()
 			return kwargs		
 
-	#@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
 		if self.request.user.is_anonymous():
 			return HttpResponseRedirect('/login')

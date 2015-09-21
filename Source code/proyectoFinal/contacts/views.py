@@ -27,7 +27,7 @@ def contactomail(request):
                 nombre = formulario.cleaned_data['Nombre']
                 email = formulario.cleaned_data['Email']
                 mensaje = "Has recibido un mensaje de "+nombre+"\nremitente : "+email+"\nMensaje : "+formulario.cleaned_data['Mensaje']
-                send_mail(asunto, mensaje, email,['service.minutogol@gmail.com'])
+                send_mail(asunto, mensaje, email,['service.minutogol@gmail.com'],fail_silently=False)
                 message = 1
             except Exception:
                 message = 0

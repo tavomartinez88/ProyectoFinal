@@ -22,7 +22,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -173,7 +173,7 @@
                       </tr>
                       {% for playerinfo in results %}
                         <tr>
-                          <td><center><p>{{playerinfo.user}}</p></center></td>
+                          <td><center><p>{{playerinfo.user.firstname}} {{playerinfo.user.lastname}}</p></center></td>
                           <td><center><p>{{playerinfo.goals}}</p></center></td>
                           <td><center><p>{{playerinfo.yellowCards}}</p></center></td>
                           <td><center><p>{{playerinfo.redCards}}</p></center></td>

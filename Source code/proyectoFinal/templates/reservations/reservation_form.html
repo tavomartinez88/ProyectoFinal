@@ -21,7 +21,7 @@
     <script src="{% static "js/jquery-ui.js" %}"></script>
     <script>
       $(function() {
-        $( '#datepicker' ).datepicker();
+        $( '#datepicker' ).datepicker({minDate:0});
         $( '#datepicker' ).datepicker('option', 'dateFormat', 'dd/mm/yy');
       });
     </script>    
@@ -31,7 +31,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>

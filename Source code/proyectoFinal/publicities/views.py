@@ -55,7 +55,7 @@ def nueva_publicidad(request):
 		message = """Oops!!! ha ocurrido un inconveniente, no tiene los permisos necesarios para cargar una 
 					 nueva publicidad,intente más tarde si aún persiste el inconveniente contactese."""
 		sendmail = True
-		return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+		return render_to_response('404.html',{'message':message,'sendmail':sendmail}, context_instance=RequestContext(request))
 
 """
 Esta vista se encarga de actualizar una publicidad, el usuario que actualiza la publicidad
@@ -70,7 +70,7 @@ def update_publish(request,idpublicidad):
 	except Exception:
 		message = """Oops!!! ha ocurrido un inconveniente, no se encontró la publicidad,intente más tarde si aún persiste el inconveniente contactese."""
 		sendmail = True
-		return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+		return render_to_response('404.html',{'message':message,'sendmail':sendmail}, context_instance=RequestContext(request))
 	if usuario.userType=='PR' and publicacion.user == request.user:
 		try:
 			publish_one = Publicity.objects.all().order_by('?').first()
@@ -96,9 +96,9 @@ def update_publish(request,idpublicidad):
 		return render_to_response('publicities/updatepublicidad.html',{'formulario':formulario,'publish_one':publish_one,'publish_second':publish_second}, context_instance=RequestContext(request))		
 	else:
 		message = """Oops!!! ha ocurrido un inconveniente, no tiene los permisos necesarios para actualizar
-					 una publicidad,intente más tarde si aún persiste el inconveniente contactese."""
+					 una publicidad, esta publicidad es ajena a usted, intente más tarde si aún persiste el inconveniente contactese."""
 		sendmail = True
-		return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+		return render_to_response('404.html',{'message':message,'sendmail':sendmail}, context_instance=RequestContext(request))
 
 """
 Esta vista se encarga de la eliminación de una  publicidad, el usuario que elimina la publicidad
@@ -118,10 +118,7 @@ class deletePublicity(DeleteView):
 	  	try:
 	  		usuario = UserProfile.objects.get(user= self.request.user)
 	  	except Exception:
-			message = """Oops!!! ha ocurrido un inconveniente, no tiene los permisos necesarios para cargar una 
-						 nueva publicidad,intente más tarde si aún persiste el inconveniente contactese."""
-			sendmail = True
-			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+			return HttpResponseRedirect('/login')
 		if usuario.userType=='PR':
 			return super(deletePublicity,self).dispatch(*args, **kwargs)
 		else:
@@ -129,17 +126,14 @@ class deletePublicity(DeleteView):
 						 para eliminar esta publicidad, intente más tarde si aún persiste el 
 						 inconveniente contactese."""
 			sendmail = True
-			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+			return render_to_response('404.html',{'message':message,'sendmail':sendmail}, context_instance=RequestContext(self.request))
 		
 
 	def get_object(self, queryset=None):
 		publicidad = super(deletePublicity,self).get_object()
 		
 		if publicidad.user != self.request.user:
-			message = """Oops!!! ha ocurrido un inconveniente, no tiene los permisos necesarios para eliminar 
-						 esta publicidad,por no ser el dueño de la publicidad, contactesea por cualquier consulta."""
-			sendmail = True
-			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+			raise Http404
 		return publicidad	
 
 	def get_context_data(self, **kwargs):
@@ -167,17 +161,27 @@ class listPublish(ListView):
   context_object_name = 'publicaciones'
   paginate_by = 3
 
-  def get_queryset(self):
+  def dispatch(self, *args, **kwargs):
   	if self.request.user.is_anonymous():
   		return HttpResponseRedirect('/login')
+  	else:
+  		try:
+  			usuario = UserProfile.objects.get(user = self.request.user)
+  		except Exception:
+  			return HttpResponseRedirect('/login')
+  		if usuario.userType=='CM':
+			message = """Oops!!! ha ocurrido un inconveniente, no tiene acceso a esta sección.Contactese ante alguna duda."""
+			sendmail = True
+			return render_to_response('404.html',{'message':message,'sendmail':sendmail}, context_instance=RequestContext(self.request))
+  		return super(listPublish, self).dispatch(*args, **kwargs)
+
+  def get_queryset(self):
   	try:
   		usuario = UserProfile.objects.get(user = self.request.user)
   		if usuario.userType == 'PR':
   			return Publicity.objects.filter(user=self.request.user)
-  		else:
-  			return Publicity.objects.none() 		
-  	except Exception:
-  		return HttpResponseRedirect('/login')
+ 	except Exception:
+  		raise Http404
 
   def get_context_data(self, **kwargs):
   	context = super(listPublish, self).get_context_data(**kwargs)

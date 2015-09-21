@@ -29,7 +29,7 @@ def addplayerinfo(request, idplayer, idtournament):
 	try:
 		usuario = UserProfile.objects.get(user=request.user)
 	except Exception:
-		return HttpResponseRedirect('/login')
+		usuario = None
 	if usuario.userType == 'PR':
 		try:
 			publish_one = Publicity.objects.all().order_by('?').first()
@@ -55,8 +55,12 @@ def addplayerinfo(request, idplayer, idtournament):
 					player.save()
 			return HttpResponseRedirect('/playersinfo')
 		else:
-			mform = PlayerForm()
-			player_id = UserProfile.objects.get(id=idplayer)
+			torneo = Tournament.objects.get(id=idtournament)
+			if torneo.complex.user!=request.user:
+			 	raise Http404
+			else:
+				mform = PlayerForm()
+				player_id = UserProfile.objects.get(id=idplayer)
 		return render_to_response('playersinfo/addplayerinfo.html', {'mform': mform, 'player_id':player_id,'idtournament':idtournament,'publish_one':publish_one,'publish_second':publish_second}, RequestContext(request, {}))
 	else:
 		message = """
@@ -72,7 +76,7 @@ de la estadistica"""
 def info(request, idplayer, idtournament):
 	try:
 		playerForStatisticUpdate = UserProfile.objects.get(id=idplayer)
-		estadistica = PlayersInfo.objects.filter(user_id=playerForStatisticUpdate.id, tournament_id=idtournament)
+		torneo = Tournament.objects.get(id=idtournament)
 	except Exception:
 		message = """
 				  Oops!!! ha ocurrido un inconveniente,intente más tarde.Si el inconveniente persiste contactese.
@@ -83,7 +87,7 @@ def info(request, idplayer, idtournament):
 		stadistic = PlayersInfo.objects.get(user_id=playerForStatisticUpdate.id, tournament_id=idtournament)
 		return HttpResponseRedirect('/editPlayer/'+str(stadistic.id))
 	else:
-		torneo = Tournament.objects.get(id=idtournament)
+		#torneo = Tournament.objects.get(id=idtournament)
 		return HttpResponseRedirect('/addplayerinfo/'+str(idplayer)+'/'+str(idtournament))
 
 """
@@ -140,18 +144,19 @@ class updatePlayerInfo(UpdateView):
   		else:
   			try:
   				usuario = UserProfile.objects.get(user=self.request.user)
-  				if usuario.userType=='PR':
-  					return super(updatePlayerInfo, self).dispatch(*args, **kwargs)
-  				else:
-  					message = """
-  							  Oops!!! ha ocurrido un inconveniente, no tienes los permisos necesarios 
-  							  para poder actualizar las estadisticas del jugador, intente más tarde.
-  							  Si aún persiste el inconveniente contactese
-  							  """
-  					sendmail = True
-  					return render_to_response('404.html',{'message':message,'sendmail':sendmail})  				
   			except Exception:
-  				return HttpResponseRedirect('/login')
+  				usuario = None
+  			
+  			if usuario.userType=='PR':
+  				return super(updatePlayerInfo, self).dispatch(*args, **kwargs)
+  			else:
+  				message = """
+  						  Oops!!! ha ocurrido un inconveniente, no tienes los permisos necesarios 
+  						  para poder actualizar las estadisticas del jugador, intente más tarde.
+  						  Si aún persiste el inconveniente contactese
+  						  """
+  				sendmail = True
+  				return render_to_response('404.html',{'message':message,'sendmail':sendmail})
 
 	def get_object(self, querySet=None):
 		estadistica = super(updatePlayerInfo, self).get_object()
@@ -162,16 +167,10 @@ class updatePlayerInfo(UpdateView):
 			usuario = UserProfile.objects.get(user=self.request.user)
 		except Exception:
 			raise Http404
-		if usuario.userType == 'PR' and  self.request.user.is_staff and usuario.user == usuario_complex.user:
+		if usuario.userType == 'PR' and usuario.user == usuario_complex.user:
 			return estadistica
 		else:
-			message = """
-					  Oops!!! ha ocurrido un inconveniente, no tienes los permisos necesarios 
-					  para poder actualizar la estadisticas del jugador, intente mas tarde.
-					  Si aún persiste el inconveniente 
-					  """
-			sendmail = True
-			return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+			raise Http404
 
 	def get_context_data(self, **kwargs):
 	    # Call the base implementation first to get a context
@@ -200,12 +199,12 @@ def searchPlayerInfo(request):
   		raise Http404
   else:
 	results = []
-	try:
-		publish_one = Publicity.objects.all().order_by('?').first()
-	except Exception:
-		publish_one = False
-	try:
-		publish_second = Publicity.objects.all().exclude(id=publish_one.id).order_by('?').first()
-	except Exception:
+  try:
+	publish_one = Publicity.objects.all().order_by('?').first()
+  except Exception:
+	publish_one = False
+  try:
+	publish_second = Publicity.objects.all().exclude(id=publish_one.id).order_by('?').first()
+  except Exception:
 		publish_second = False	
   return render_to_response("playersinfo/searchPlayerInfo.html",{"results": results,"query": query,'publish_one':publish_one,'publish_second':publish_second}, RequestContext(request, {}))

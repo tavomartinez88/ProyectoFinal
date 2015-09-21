@@ -31,12 +31,7 @@ class TeamCreate(CreateView):
    		try:
    			usuario = UserProfile.objects.get(user = self.request.user)
    		except Exception:
-   			message = """
-   					  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-   					  poder crear un nuevo equipo.Para mas información contactese.
-   					  """
-   			sendmail = True		  
-   			return render_to_response('404.html',{'message':message,'sendmail':sendmail})   		
+			return HttpResponseRedirect('/login')  		
    		if usuario.userType=='CM' :
    			return super(TeamCreate, self).dispatch(*args, **kwargs)
    		else:
@@ -99,7 +94,7 @@ def playersTeam(request,idteam,idtournament):
   if request.user.is_anonymous():
    	message = """
    			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-   			  poder ver los jugadores de este equipo.Para mas información contactese.
+   			  poder ver los jugadores de este equipo.Debe iniciar sesión, para mas información contactese.
    			  """
    	sendmail = True		  
    	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
@@ -132,7 +127,7 @@ def playersOfTeam(request,idteam):
   if request.user.is_anonymous():
    	message = """
    			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-   			  poder ver los jugadores de este equipo.Para mas información contactese.
+   			  poder ver los jugadores de este equipo.Debe iniciar sesión, para mas información contactese.
    			  """
    	sendmail = True		  
    	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
@@ -221,19 +216,21 @@ class deleteTeam(DeleteView):
 		return kwargs
 
 	def dispatch(self, *args, **kwargs):
+		if self.request.user.is_anonymous():
+			return HttpResponseRedirect('/login')
 		try:
 			usuario = UserProfile.objects.get(user=self.request.user)
 		except Exception:
-		   	message = """
-		   			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
-		   			  poder eliminar este equipo.Para mas información contactese.
-		   			  """
-		   	sendmail = True		  
-		   	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
+			return HttpResponseRedirect('/login')
 		if usuario.userType=='CM':
 			return super(deleteTeam,self).dispatch(*args, **kwargs)
 		else:
-			raise Http404
+		   	message = """
+		   			  Oops!!! ha ocurrido un inconveniente,no tienes los permisos necesarios para 
+		   			  poder eliminar este equipo.Para más información contactese.
+		   			  """
+		   	sendmail = True		  
+		   	return render_to_response('404.html',{'message':message,'sendmail':sendmail})
 
 	def get_context_data(self, **kwargs):
 	    # Call the base implementation first to get a context

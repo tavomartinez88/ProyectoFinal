@@ -22,7 +22,7 @@
       <div class="container">
         <div class="header">
           <div class="logo">
-            <a href="/"><img src="{% static "images/others/logo.png" %}" alt=""/></a>
+            <a href="/"><img src="{% static "images/others/logo.png" %}" class="img-responsive" alt=""/></a>
           </div>
           <div class="h_menu">
             <a id="touch-menu" class="mobile-menu" href="#">Menu</a>
@@ -210,12 +210,18 @@
 
 								</div>
   {% else %}
+    {% if not user.is_authenticated %}
               <div class="alert alert-warning alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       No se ha creado ninguna estadistica de ningun jugador en los torneos creados o no tienes los 
-       permisos necesarios para ver las estadisticas de los jugadores
+                  Para poder ver estadisticas de jugadores en los distintos torneos debe iniciar sesión
+              </div>            
+    {%else%}
+
+              <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    No se ha creado ninguna estadistica de ningun jugador en los torneos creados disputados en su/s complejo/s
               </div>      	
-    
+    {% endif %}  
   {% endif %}
 		            
               <div class="clearfix"></div>

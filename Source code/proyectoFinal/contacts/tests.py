@@ -5,7 +5,7 @@ class EmailTest(TestCase):
     def test_send_email(self):
         # Send message.
         mail.send_mail('Subject here', 'Here is the message.',
-            'gmartinezgranella@gmail.com', ['gmartinezgranella@gmail.com'],
+            'arielgranella@gmail.com', ['gmartinezgranella@gmail.com'],
             fail_silently=False)
 
         # Test that one message has been sent.
