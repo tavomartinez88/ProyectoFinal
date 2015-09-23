@@ -152,6 +152,11 @@
                 	Atención, si usted crea un nuevo equipo será asignado como capitán del mismo.
 					Si así lo desea, por favor complete los campos solicitados(una vez creado el equipo podra cambiar el capitan si asi lo desea, actualizandolo)
             </div>
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Recuerde agregarse al equipo, para ser parte de la formación
+            </div>
+
           	<form action="" method="post">{% csrf_token %}
       			    <div class="form-group">
       			    	{{ form.as_p }}
