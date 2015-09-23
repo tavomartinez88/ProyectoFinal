@@ -77,6 +77,7 @@ def info(request, idplayer, idtournament):
 	try:
 		playerForStatisticUpdate = UserProfile.objects.get(id=idplayer)
 		torneo = Tournament.objects.get(id=idtournament)
+		estadistica = PlayersInfo.objects.filter(user_id=idplayer, tournament_id=torneo.id)
 	except Exception:
 		message = """
 				  Oops!!! ha ocurrido un inconveniente,intente más tarde.Si el inconveniente persiste contactese.
