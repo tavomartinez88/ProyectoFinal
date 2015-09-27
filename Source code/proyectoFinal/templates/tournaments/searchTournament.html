@@ -179,7 +179,7 @@
                         
                         <td><center><p>{{ tournament.name|escape }}</p></center></td>
                         <td><center><p>{{ tournament.complex|escape }}</p></center></td>
-                        <td><center><a href="/teamsinscriptions/{{tournament.id}}" class="btn btn-primary" role="button">Ver equipos</center></a></td>
+                        <td><center><a href="/teamsinscriptions/{{tournament.id}}" class="btn btn-primary" role="button">Ver equipos inscriptos</center></a></td>
                         {% ifequal user.get_profile.userType 'PR' %}
                         <td><center><a href="/canceltournament/{{tournament.id}}" class="btn btn-primary" role="button">Eliminar</center></a></td>
                         <td><center><a href="/updatetournament/{{tournament.id}}" class="btn btn-primary" role="button">Actualizar</center></a></td>

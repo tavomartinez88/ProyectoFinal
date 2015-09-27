@@ -26,5 +26,7 @@ class MatchFormUpdate(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MatchFormUpdate, self).__init__(*args, **kwargs)
+        self.fields['scoreLocal'].label='Goles local'
+        self.fields['scoreVisit'].label='Goles visitante'
         self.fields['scoreLocal'].widget.attrs.update({'class': 'form-control'})
         self.fields['scoreVisit'].widget.attrs.update({'class': 'form-control'})               

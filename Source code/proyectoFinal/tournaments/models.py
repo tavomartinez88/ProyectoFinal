@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from proyectoFinal.teams.models import Team
 from proyectoFinal.complexes.models import Complex

@@ -1,4 +1,4 @@
-#encoding:utf-8
+# -*- coding: utf-8 -*-
 from django import forms
 from models import Tournament
 from proyectoFinal.complexes.models import Complex
@@ -10,9 +10,8 @@ class TournamentForm(forms.ModelForm):
 
     def __init__(self, user, *args, **kwargs):
         super(TournamentForm, self).__init__(*args, **kwargs)
-        self.fields['complex'] = forms.ModelChoiceField(queryset=Complex.objects.filter(user_id=user))
+        self.fields['complex'] = forms.ModelChoiceField(queryset=Complex.objects.filter(user_id=user), label='Complejo')
         for field in self.fields:
-            # Recorremos todos los campos del modelo para añadirle class="form-control
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 
 class TournamentFormUpdate(forms.ModelForm):
