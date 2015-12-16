@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'proyectoFinal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.mysql', 
+        'ENGINE':'django.db.backends.mysql',
         'NAME': 'db_tesis',
         'USER': 'root',
         'PASSWORD': 'root',
@@ -116,4 +116,3 @@ EMAIL_HOST_USER = 'service.minutogol@gmail.com'
 EMAIL_HOST_PASSWORD = '36123477'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-

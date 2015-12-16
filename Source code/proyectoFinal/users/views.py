@@ -17,6 +17,7 @@ from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 
 
+
 """
 Esta vista se encarga de la alta de un usuario
 """
@@ -51,17 +52,38 @@ def register(request):
 			else:
 				mail = request.POST.get('email')
 				nombreUsuario = request.POST.get('username')
+				nombre = request.POST.get('firstname')
+				apellido = request.POST.get('lastname')
+				password = request.POST.get('password')
+				telefono = request.POST.get('number')
 				mensaje = ''
-				if User.objects.filter(email=mail).count()>0 and User.objects.filter(username=nombreUsuario).count()>0:
-					mensaje = "Error al intentar registrarse, ya existe una cuenta con ese e-mail.Contactese con Minutogol y el nombre de usuario no está disponible.Cambie el email ingresado y pruebe otro nombre de usuario"
-				else:
-					if User.objects.filter(email=mail).count()>0:
-						mensaje = "Error al intentar registrarse, ya existe una cuenta con ese e-mail.Contactese con Minutogol"
-					else:
-						if User.objects.filter(username=nombreUsuario).count()>0:
-							mensaje = "Error al intentar registrarse, el nombre de usuario no está disponible.Pruebe ingresando otro."
+				status_nombre = False
+				status_apellido = False
+				status_mail = False
+				status_nombreUsuario = False
+				status_password = False
+				status_telefono = False
+				if len(nombre)<3 or nombre.isalpha()== False:
+					status_nombre = True
+				if len(apellido)<3 or apellido.isalpha()==False :
+					status_apellido = True
+				if len(mail)<6 or not '@' in mail or not '.com' in mail:
+					status_mail = True
+				if len(nombreUsuario)<6 or nombreUsuario.isalphanumeric()==False:
+					status_nombreUsuario = True
+				if len(password)<6 or password.isalnum():
+				 	status_password = True
+				if len(telefono)<6:
+					status_telefono = True
+				if status_nombre:
+					mensaje = "Error al intentar registrarse, corregir los siguientes errores:\n"+"-El nombre debe contener mas de 2 caracteres(caracteres válidos a-z)\n"
+				if status_apellido:
+					mensaje = mensaje+"-El apellido debe contener mas de 2 caracteres(caracteres válidos a-z)\n"
+				if status_password:
+					mensaje = mensaje +"-La contraseña debe contener mas de 5 digitos y debe contener letras y al menos un numero\n"
+				if status_telefono:
+					mensaje = mensaje+"-El telefono debe estar compuesto unicamente por numeros y debe contener al menos 10 digitos\n"
 				return render_to_response('users/register.html', {'mensaje':mensaje}, RequestContext(request, {}))
-				
 		else:
 			form = UserForm()
 			tform = TelephoneForm()
@@ -92,13 +114,13 @@ class userUpdate(UpdateView):
 	    try:
 	    	context['publish_third'] = Publicity.objects.all().order_by('?').exclude(id=context['publish_one'].id).exclude(id=context['publish_second'].id).first()
 	    except Exception:
-	    	context['publish_third'] = False  	
+	    	context['publish_third'] = False
 	    return context
 
 
 	def get_form_kwargs(self):
 			kwargs = super(userUpdate, self).get_form_kwargs()
-			return kwargs		
+			return kwargs
 
 	def dispatch(self, *args, **kwargs):
 		if self.request.user.is_anonymous():
@@ -117,7 +139,7 @@ class telephoneUpdate(UpdateView):
 	template_name_suffix = '_update_form'
 	success_url = None
 	def get_success_url(self):
-		#updateuser it's tag of route /update_user/id in url.py 
+		#updateuser it's tag of route /update_user/id in url.py
 		try:
 			usuario=UserProfile.objects.get(user=self.request.user)
 		except Exception:
@@ -126,7 +148,7 @@ class telephoneUpdate(UpdateView):
 
 	def get_form_kwargs(self):
 				kwargs = super(telephoneUpdate, self).get_form_kwargs()
-				return kwargs		
+				return kwargs
 
 	def get_context_data(self, **kwargs):
 	    # Call the base implementation first to get a context
@@ -140,7 +162,7 @@ class telephoneUpdate(UpdateView):
 	    	context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).first()
 	    except Exception:
 	    	context['publish_second'] = False
-	    return context				
+	    return context
 
 	#@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
@@ -148,7 +170,7 @@ class telephoneUpdate(UpdateView):
 			return HttpResponseRedirect('/login')
 		return super(telephoneUpdate, self).dispatch(*args, **kwargs)
 
-	
+
 	def get_object(self,queryset=None):
 	   	tel = super(telephoneUpdate, self).get_object()
 	   	usuario = UserProfile.objects.get(user=self.request.user)
@@ -161,7 +183,7 @@ class deleteUser(DeleteView):
 	success_url = '/'
 	def get_form_kwargs(self):
 				kwargs = super(deleteUser, self).get_form_kwargs()
-				return kwargs		
+				return kwargs
 
 	def dispatch(self, *args, **kwargs):
 		if self.request.user.is_anonymous():
@@ -180,7 +202,7 @@ class deleteUser(DeleteView):
 	    	context['publish_second'] = Publicity.objects.all().exclude(id=context['publish_one'].id).first()
 	    except Exception:
 	    	context['publish_second'] = False
-	    return context			
+	    return context
 
 	def get_object(self, queryset=None):
 	  #select the user object that we want to delete
